@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.ssj</groupId>
+        <artifactId>YunBlog</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>yunblog-common</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>yunblog-common</name>
+    <description>yunblog-common</description>
+
+    <properties>
+        <java.version>21</java.version>
+    </properties>
+
+    <build>
+        <plugins>
+            <!-- 如果父模块继承了spring-boot-maven-plugin，需要在这里显式配置 -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>3.2.1</version> <!-- 与父模块版本一致 -->
+                <configuration>
+                    <!-- 禁用repackage，只打包为普通JAR -->
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
