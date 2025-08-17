@@ -17,14 +17,6 @@ import java.util.List;
 public interface RoleDao extends BaseMapper<Role> {
 
     /**
-     * 通过ID查询单条数据
-     *
-     * @param id 主键
-     * @return 实例对象
-     */
-    Role queryById(String id);
-
-    /**
      * 统计总行数
      *
      * @param role 查询条件
@@ -48,22 +40,6 @@ public interface RoleDao extends BaseMapper<Role> {
      * @throws org.springframework.jdbc.BadSqlGrammarException 入参是空List的时候会抛SQL语句错误的异常，请自行校验入参
      */
     int insertOrUpdateBatch(@Param("entities") List<Role> entities);
-
-    /**
-     * 修改数据
-     *
-     * @param role 实例对象
-     * @return 影响行数
-     */
-    int update(Role role);
-
-    /**
-     * 通过主键删除数据
-     *
-     * @param id 主键
-     * @return 影响行数
-     */
-    int deleteById(String id);
 
 }
 

@@ -1,5 +1,6 @@
 package com.ssj.yunblog.admin.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ssj.yunblog.admin.entity.Role;
 import com.ssj.yunblog.admin.dao.RoleDao;
@@ -26,7 +27,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements RoleS
      */
     @Override
     public Role queryById(String id) {
-        return this.roleDao.queryById(id);
+        return roleDao.selectById(id);
     }
 
     /**
@@ -47,9 +48,8 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements RoleS
      * @return 实例对象
      */
     @Override
-    public Role update(Role role) {
-        this.roleDao.update(role);
-        return this.queryById(role.getId());
+    public Integer update(Role role) {
+        return roleDao.updateById(role);
     }
 
     /**
@@ -59,7 +59,22 @@ public class RoleServiceImpl extends ServiceImpl<RoleDao, Role> implements RoleS
      * @return 是否成功
      */
     @Override
-    public boolean deleteById(String id) {
-        return this.roleDao.deleteById(id) > 0;
+    public Boolean deleteById(String id) {
+        return roleDao.deleteById(id) > 0;
+    }
+
+    /**
+     * 更新角色状态
+     *
+     * @param id     主键
+     * @param status 状态
+     * @return 是否成功
+     */
+    @Override
+    public Boolean updateStatus(String id, Integer status) {
+        LambdaUpdateWrapper<Role> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.eq(Role::getId, id)
+                .set(Role::getUseStatus, status);
+        return roleDao.update(updateWrapper) > 0;
     }
 }

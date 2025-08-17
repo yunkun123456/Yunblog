@@ -15,55 +15,51 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/role")
 public class RoleController {
-    /**
-     * 服务对象
-     */
+
     @Resource
     private RoleService roleService;
 
     /**
-     * 通过主键查询单条数据
-     *
-     * @param id 主键
-     * @return 单条数据
+     * 通过主键查询单条角色信息
      */
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public Result<Role> queryById(@PathVariable("id") String id) {
-        return Result.ok(this.roleService.queryById(id));
+        return Result.ok(roleService.queryById(id));
     }
 
     /**
-     * 新增数据
-     *
-     * @param role 实体
-     * @return 新增结果
+     * 新增角色
      */
     @PostMapping
-    public Result<Role> add(@RequestBody Role role) {
-        this.roleService.insert(role);
+    public Result add(@RequestBody Role role) {
+        roleService.insert(role);
         return Result.ok();
     }
 
     /**
-     * 编辑数据
-     *
-     * @param role 实体
-     * @return 编辑结果
+     * 编辑角色信息
      */
     @PutMapping
-    public Result<Role> edit(Role role) {
-        return Result.ok(this.roleService.update(role));
+    public Result edit(Role role) {
+        roleService.update(role);
+        return Result.ok();
     }
 
     /**
-     * 删除数据
-     *
-     * @param id 主键
-     * @return 删除是否成功
+     * 删除角色数据
      */
-    @DeleteMapping
-    public Result<Boolean> deleteById(String id) {
-        return Result.ok(this.roleService.deleteById(id));
+    @DeleteMapping("/{id}")
+    public Result deleteById(@PathVariable("id") String id) {
+        roleService.deleteById(id);
+        return Result.ok();
+    }
+
+    /**
+     * 更新角色状态
+     */
+    @PutMapping("/status/{id}")
+    public Result<Boolean> updateStatus(@PathVariable("id") String id, @RequestParam("status") Integer status) {
+        return Result.ok(roleService.updateStatus(id, status));
     }
 
 }

@@ -28,6 +28,10 @@ public class Role {
      */
     private String roleCode;
     /**
+     * 使用状态;0-禁用，1-启用
+     */
+    private String useStatus;
+    /**
      * 删除状态;0-未删除，1-已删除
      */
     private String delStatus;
