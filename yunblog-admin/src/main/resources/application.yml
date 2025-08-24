@@ -1,0 +1,29 @@
+server:
+  port: 8080
+sa-token:
+  # token 名称
+  token-name: yunblog
+  # 会话保存10天
+  timeout: 864000
+  # token 最低活跃频次，-1表示不限制
+  active-timeout: -1
+  # 允许同一时间多地登录账号
+  is-concurrent: true
+  # 允许多人登录同一账号
+  is-share: false
+  # token风格
+  token-style: uuid
+  # 是否输出日志
+  is-log: true
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://14.103.150.52:3306/yunblog?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: Ssj200115
+
+  data:
+    redis:
+      host: 14.103.150.52
+      port: 6379
+      password: ssj200115

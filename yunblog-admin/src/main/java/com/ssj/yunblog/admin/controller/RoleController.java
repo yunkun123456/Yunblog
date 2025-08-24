@@ -1,9 +1,13 @@
 package com.ssj.yunblog.admin.controller;
 
 import com.ssj.yunblog.admin.entity.Role;
+import com.ssj.yunblog.admin.entity.bo.RoleBo;
+import com.ssj.yunblog.admin.entity.bo.RolePermissionBo;
 import com.ssj.yunblog.admin.service.RoleService;
+import com.ssj.yunblog.common.api.Add;
 import com.ssj.yunblog.common.entity.Result;
 import jakarta.annotation.Resource;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -20,46 +24,19 @@ public class RoleController {
     private RoleService roleService;
 
     /**
-     * 通过主键查询单条角色信息
-     */
-    @GetMapping("/{id}")
-    public Result<Role> queryById(@PathVariable("id") String id) {
-        return Result.ok(roleService.queryById(id));
-    }
-
-    /**
      * 新增角色
      */
     @PostMapping
-    public Result add(@RequestBody Role role) {
-        roleService.insert(role);
-        return Result.ok();
+    public Result<Boolean> add(@Validated(Add.class) @RequestBody RoleBo role) {
+        return roleService.add(role);
     }
 
     /**
-     * 编辑角色信息
+     * 角色关联权限
      */
-    @PutMapping
-    public Result edit(Role role) {
-        roleService.update(role);
-        return Result.ok();
-    }
-
-    /**
-     * 删除角色数据
-     */
-    @DeleteMapping("/{id}")
-    public Result deleteById(@PathVariable("id") String id) {
-        roleService.deleteById(id);
-        return Result.ok();
-    }
-
-    /**
-     * 更新角色状态
-     */
-    @PutMapping("/status/{id}")
-    public Result<Boolean> updateStatus(@PathVariable("id") String id, @RequestParam("status") Integer status) {
-        return Result.ok(roleService.updateStatus(id, status));
+    @PostMapping("/associatedPermissions")
+    public Result<Boolean> associatedPermissions(@Validated(Add.class) @RequestBody RolePermissionBo rolePermission) {
+        return roleService.associatedPermissions(rolePermission);
     }
 
 }

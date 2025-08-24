@@ -2,6 +2,9 @@ package com.ssj.yunblog.admin.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ssj.yunblog.admin.entity.Role;
+import com.ssj.yunblog.admin.entity.bo.RoleBo;
+import com.ssj.yunblog.admin.entity.bo.RolePermissionBo;
+import com.ssj.yunblog.common.entity.Result;
 
 /**
  * 角色信息服务接口
@@ -12,27 +15,17 @@ import com.ssj.yunblog.admin.entity.Role;
 public interface RoleService extends IService<Role> {
 
     /**
-     * 通过ID查询单条数据
+     * 根据code查询角色信息
      */
-    Role queryById(String id);
+    Role queryByCode(String code);
 
     /**
-     * 新增数据
+     * 新增角色
      */
-    Integer insert(Role role);
+    Result<Boolean> add(RoleBo role);
 
     /**
-     * 修改数据
+     * 角色关联权限
      */
-    Integer update(Role role);
-
-    /**
-     * 通过主键删除数据
-     */
-    Boolean deleteById(String id);
-
-    /**
-     * 更新角色状态
-     */
-    Boolean updateStatus(String id, Integer status);
+    Result<Boolean> associatedPermissions(RolePermissionBo rolePermission);
 }

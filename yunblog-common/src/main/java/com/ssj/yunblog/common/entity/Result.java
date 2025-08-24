@@ -29,6 +29,17 @@ public class Result<T> {
     }
 
     /**
+     * 请求成功 - data,message
+     */
+    public static <T> Result<T> ok(T data, String message) {
+        Result<T> result = new Result<>();
+        result.setCode(ResultCode.OK);
+        result.setData(data);
+        result.setMessage(message);
+        return result;
+    }
+
+    /**
      * 请求成功
      */
     public static <T> Result<T> ok() {
