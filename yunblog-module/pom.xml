@@ -27,6 +27,11 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>3.2.1</version> <!-- 与父模块版本一致 -->
+                <configuration>
+                    <!-- 禁用repackage，只打包为普通JAR -->
+                    <skip>true</skip>
+                </configuration>
             </plugin>
         </plugins>
     </build>
