@@ -18,12 +18,12 @@ sa-token:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://14.103.150.52:3306/yunblog?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull
+    url: jdbc:mysql://172.17.0.3:3306/yunblog?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull
     username: root
     password: Ssj200115
 
   data:
     redis:
-      host: 14.103.150.52
+      host: 172.17.0.4
       port: 6379
       password: ssj200115
