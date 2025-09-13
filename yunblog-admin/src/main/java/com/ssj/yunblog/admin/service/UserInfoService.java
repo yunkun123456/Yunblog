@@ -27,5 +27,5 @@ public interface UserInfoService extends IService<UserInfo> {
      * 用户登录
      * @return
      */
-    Result<Boolean> login(String account, String password);
+    Result<String> login(String account, String password);
 }

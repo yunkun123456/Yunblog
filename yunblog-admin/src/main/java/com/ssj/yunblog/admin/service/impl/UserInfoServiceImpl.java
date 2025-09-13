@@ -88,10 +88,10 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
      * 用户登录
      */
     @Override
-    public Result<Boolean> login(String account, String password) {
-        if (StpUtil.isLogin()) {
-            return Result.fail("请勿重复登录！");
-        }
+    public Result<String> login(String account, String password) {
+//        if (StpUtil.isLogin()) {
+//            return Result.fail("请勿重复登录！");
+//        }
         LambdaQueryWrapper<UserInfo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserInfo::getUserAccount, account)
                 .eq(UserInfo::getPassword, SaSecureUtil.md5(password))
@@ -112,6 +112,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
         List<Permission> permissions = permissionService.queryPermissionsByRoleId(role.getId());
         List<String> permissionCodes = permissions.stream().map(Permission::getPermissionCode).toList();
         redisTemplate.opsForValue().set(RedisKey.PERMISSION_KEY + StpUtil.getLoginId(), permissionCodes);
-        return Result.ok(true, "登录成功！");
+        String tokenValue = StpUtil.getTokenInfo().getTokenValue();
+        return Result.ok(tokenValue, "登录成功！");
     }
 }

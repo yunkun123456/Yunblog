@@ -42,7 +42,7 @@ public class UserInfoController {
      * 用户登录
      */
     @GetMapping("/login")
-    public Result<Boolean> login(@RequestParam("account") String account, @RequestParam("password") String password) {
+    public Result<String> login(@RequestParam("account") String account, @RequestParam("password") String password) {
         if (account.isEmpty() || password.isEmpty()) {
             return Result.fail("账号或密码不能为空！");
         }
