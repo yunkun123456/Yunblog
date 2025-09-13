@@ -45,6 +45,12 @@
             <artifactId>yunblog-module-file-service</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.ssj</groupId>
+            <artifactId>yunblog-module-base-info</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

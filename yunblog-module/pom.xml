@@ -15,6 +15,7 @@
     <modules>
         <module>yunblog-module-setting</module>
         <module>yunblog-module-file-service</module>
+        <module>yunblog-module-base-info</module>
     </modules>
     <properties>
         <java.version>21</java.version>
