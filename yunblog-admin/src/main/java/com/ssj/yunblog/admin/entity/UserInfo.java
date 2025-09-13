@@ -37,6 +37,10 @@ public class UserInfo {
      */
     private String email;
     /**
+     * 用户头像
+     */
+    private String avatar;
+    /**
      * 角色标识
      */
     private String roleCode;

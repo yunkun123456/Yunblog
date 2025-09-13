@@ -35,6 +35,10 @@ public class UserInfoVo {
      */
     private String email;
     /**
+     * 用户头像
+     */
+    private String avatar;
+    /**
      * 角色标识
      */
     private String roleCode;
@@ -42,22 +46,6 @@ public class UserInfoVo {
      * 删除标识，0未删除，1已删除
      */
     private String delStatus;
-    /**
-     * 创建人
-     */
-    private String createBy;
-    /**
-     * 创建时间
-     */
-    private String createTime;
-    /**
-     * 更新人
-     */
-    private String updateBy;
-    /**
-     * 更新时间
-     */
-    private String updateTime;
 
 }
 

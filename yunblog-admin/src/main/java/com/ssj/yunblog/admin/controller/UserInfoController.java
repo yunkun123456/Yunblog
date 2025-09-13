@@ -1,6 +1,7 @@
 package com.ssj.yunblog.admin.controller;
 
 import com.ssj.yunblog.admin.entity.bo.UserInfoBo;
+import com.ssj.yunblog.admin.entity.vo.UserInfoVo;
 import com.ssj.yunblog.admin.service.UserInfoService;
 import com.ssj.yunblog.common.api.Add;
 import com.ssj.yunblog.common.api.Update;
@@ -48,6 +49,15 @@ public class UserInfoController {
         }
         return userInfoService.login(account, password);
     }
+
+    /**
+     * 获取用户信息
+     */
+    @GetMapping("/details")
+    public Result<UserInfoVo> getUserInfoDetail() {
+        return userInfoService.getUserInfoDetail();
+    }
+
 
 }
 

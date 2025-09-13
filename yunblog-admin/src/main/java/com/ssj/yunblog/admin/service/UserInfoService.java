@@ -3,6 +3,7 @@ package com.ssj.yunblog.admin.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ssj.yunblog.admin.entity.UserInfo;
 import com.ssj.yunblog.admin.entity.bo.UserInfoBo;
+import com.ssj.yunblog.admin.entity.vo.UserInfoVo;
 import com.ssj.yunblog.common.entity.Result;
 
 /**
@@ -25,7 +26,11 @@ public interface UserInfoService extends IService<UserInfo> {
 
     /**
      * 用户登录
-     * @return
      */
     Result<String> login(String account, String password);
+
+    /**
+     * 获取用户信息详情
+     */
+    Result<UserInfoVo> getUserInfoDetail();
 }

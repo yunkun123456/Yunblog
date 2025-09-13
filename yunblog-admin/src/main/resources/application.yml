@@ -27,3 +27,8 @@ spring:
       host: 14.103.150.52
       port: 6379
       password: ssj200115
+
+file:
+  service:
+    path:
+      root-path: ./doc/

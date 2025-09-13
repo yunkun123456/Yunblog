@@ -10,6 +10,7 @@ import com.ssj.yunblog.admin.entity.Role;
 import com.ssj.yunblog.admin.entity.UserInfo;
 import com.ssj.yunblog.admin.dao.UserInfoDao;
 import com.ssj.yunblog.admin.entity.bo.UserInfoBo;
+import com.ssj.yunblog.admin.entity.vo.UserInfoVo;
 import com.ssj.yunblog.admin.service.PermissionService;
 import com.ssj.yunblog.admin.service.RoleService;
 import com.ssj.yunblog.admin.service.UserInfoService;
@@ -114,5 +115,17 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
         redisTemplate.opsForValue().set(RedisKey.PERMISSION_KEY + StpUtil.getLoginId(), permissionCodes);
         String tokenValue = StpUtil.getTokenInfo().getTokenValue();
         return Result.ok(tokenValue, "登录成功！");
+    }
+
+    /**
+     * 获取用户信息详情
+     */
+    @Override
+    public Result<UserInfoVo> getUserInfoDetail() {
+        String loginId = (String) StpUtil.getLoginId();
+        UserInfo userInfo = userInfoDao.selectById(loginId);
+        UserInfoVo userInfoVo = new UserInfoVo();
+        BeanUtils.copyProperties(userInfo, userInfoVo);
+        return Result.ok(userInfoVo, "获取用户信息成功！");
     }
 }
