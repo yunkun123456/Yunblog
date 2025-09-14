@@ -28,6 +28,10 @@ spring:
       port: 6379
       password: ssj200115
 
+logging:
+  level:
+    com.ssj.yunblog.baseInfo.dao: debug
+
 file:
   service:
     path:
