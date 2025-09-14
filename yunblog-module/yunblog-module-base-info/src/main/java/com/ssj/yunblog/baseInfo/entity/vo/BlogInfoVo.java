@@ -2,6 +2,8 @@ package com.ssj.yunblog.baseInfo.entity.vo;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * (BlogInfo)实体类
  *
@@ -23,13 +25,13 @@ public class BlogInfoVo {
      */
     private String introduction;
     /**
-     * 类别id
+     * 类别信息
      */
-    private String categoryId;
+    private BlogCategoryVo category;
     /**
-     * 标签id
+     * 标签列表
      */
-    private String labelId;
+    private List<BlogLabelVo> labels;
     /**
      * 阅读量
      */
