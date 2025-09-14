@@ -1,15 +1,22 @@
 package com.ssj.yunblog.baseInfo.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ssj.yunblog.baseInfo.entity.BlogCategory;
 import com.ssj.yunblog.baseInfo.entity.BlogLabel;
 import com.ssj.yunblog.baseInfo.dao.BlogLabelDao;
 import com.ssj.yunblog.baseInfo.entity.bo.BlogLabelBo;
+import com.ssj.yunblog.baseInfo.entity.vo.BlogCategoryVo;
+import com.ssj.yunblog.baseInfo.entity.vo.BlogLabelVo;
 import com.ssj.yunblog.baseInfo.service.BlogLabelService;
 import com.ssj.yunblog.common.entity.Result;
 import com.ssj.yunblog.common.enums.DeleteStatusEnum;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -51,5 +58,22 @@ public class BlogLabelServiceImpl extends ServiceImpl<BlogLabelDao, BlogLabel> i
             return Result.ok();
         }
         return Result.fail("删除博客标签信息失败！");
+    }
+
+    /**
+     * 查询所有的标签信息
+     */
+    @Override
+    public Result<List<BlogLabelVo>> queryAllLabels() {
+        LambdaQueryWrapper<BlogLabel> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(BlogLabel::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode());
+        List<BlogLabel> blogLabels = blogLabelDao.selectList(queryWrapper);
+        List<BlogLabelVo> result = new ArrayList<>();
+        for (BlogLabel label : blogLabels) {
+            BlogLabelVo vo = new BlogLabelVo();
+            BeanUtils.copyProperties(label, vo);
+            result.add(vo);
+        }
+        return Result.ok(result);
     }
 }

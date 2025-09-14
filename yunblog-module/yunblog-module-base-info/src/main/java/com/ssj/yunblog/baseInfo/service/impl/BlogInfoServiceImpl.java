@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 /**
@@ -65,6 +66,8 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
         BlogInfoDetail detail = new BlogInfoDetail();
         BeanUtils.copyProperties(blogInfo, detail);
         info.setReadNum(0);
+        String labelIds = String.join(",", blogInfo.getTags());
+        info.setLabelId(labelIds);
         blogInfoDao.insert(info);
         detail.setBlogId(info.getId());
         detail.setDelStatus(DeleteStatusEnum.UN_DELETED.getCode());

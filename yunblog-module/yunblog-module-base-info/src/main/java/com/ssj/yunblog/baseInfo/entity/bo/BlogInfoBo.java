@@ -3,8 +3,11 @@ package com.ssj.yunblog.baseInfo.entity.bo;
 import com.ssj.yunblog.common.api.Add;
 import com.ssj.yunblog.common.api.Update;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * 博客信息 bo
@@ -39,10 +42,10 @@ public class BlogInfoBo {
     @NotBlank(message = "博客类别不能为空！", groups = {Add.class, Update.class})
     private String categoryId;
     /**
-     * 标签id
+     * 标签ids
      */
-    @NotBlank(message = "博客标签不能为空！", groups = {Add.class, Update.class})
-    private String labelId;
+    @NotNull(message = "博客标签不能为空！", groups = {Add.class, Update.class})
+    private List<String> tags;
     /**
      * 封面
      */
