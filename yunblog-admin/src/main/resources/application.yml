@@ -35,4 +35,4 @@ logging:
 file:
   service:
     path:
-      root-path: ./doc/
+      root-path: /var/jenkins_home/workspace/yunblog/doc
