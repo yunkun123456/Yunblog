@@ -14,6 +14,8 @@ public class Result<T> {
 
     private String message;
 
+    private Boolean success;
+
     private Integer code;
 
     private T data;
@@ -25,6 +27,7 @@ public class Result<T> {
         Result<T> result = new Result<>();
         result.setCode(ResultCode.OK);
         result.setData(data);
+        result.setSuccess(true);
         return result;
     }
 
@@ -36,6 +39,7 @@ public class Result<T> {
         result.setCode(ResultCode.OK);
         result.setData(data);
         result.setMessage(message);
+        result.setSuccess(true);
         return result;
     }
 
@@ -47,6 +51,7 @@ public class Result<T> {
         result.setCode(ResultCode.OK);
         result.setData(null);
         result.setMessage("请求成功");
+        result.setSuccess(true);
         return result;
     }
 
@@ -58,6 +63,7 @@ public class Result<T> {
         result.setCode(ResultCode.FAIL);
         result.setMessage(message);
         result.setData(null);
+        result.setSuccess(false);
         return result;
     }
 }
