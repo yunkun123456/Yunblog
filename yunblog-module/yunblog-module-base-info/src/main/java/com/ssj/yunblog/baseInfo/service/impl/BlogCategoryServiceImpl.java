@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ssj.yunblog.baseInfo.entity.BlogCategory;
 import com.ssj.yunblog.baseInfo.dao.BlogCategoryDao;
 import com.ssj.yunblog.baseInfo.entity.bo.BlogCategoryBo;
+import com.ssj.yunblog.baseInfo.entity.bo.BlogCategoryQueryBo;
 import com.ssj.yunblog.baseInfo.entity.vo.BlogCategoryVo;
 import com.ssj.yunblog.baseInfo.service.BlogCategoryService;
 import com.ssj.yunblog.common.entity.Result;
@@ -81,6 +82,26 @@ public class BlogCategoryServiceImpl extends ServiceImpl<BlogCategoryDao, BlogCa
             BlogCategoryVo vo = new BlogCategoryVo();
             BeanUtils.copyProperties(category, vo);
             buildCategoryTree(blogCategories, vo);
+            result.add(vo);
+        }
+        return Result.ok(result);
+    }
+
+    /**
+     * 条件查询分类信息
+     */
+    @Override
+    public Result<List<BlogCategoryVo>> queryCategoryList(BlogCategoryQueryBo param) {
+        LambdaQueryWrapper<BlogCategory> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(BlogCategory::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode())
+                .eq(param.getLevel() != null, BlogCategory::getCategoryLevel, param.getLevel())
+                .eq(param.getParentId() != null && !param.getParentId().isEmpty(), BlogCategory::getParentId, param.getParentId())
+                .orderBy(true, true, BlogCategory::getSortNum);
+        List<BlogCategory> blogCategories = blogCategoryDao.selectList(queryWrapper);
+        List<BlogCategoryVo> result = new ArrayList<>();
+        for (BlogCategory category : blogCategories) {
+            BlogCategoryVo vo = new BlogCategoryVo();
+            BeanUtils.copyProperties(category, vo);
             result.add(vo);
         }
         return Result.ok(result);

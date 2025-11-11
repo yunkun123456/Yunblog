@@ -1,6 +1,8 @@
 package com.ssj.yunblog.baseInfo.controller;
 
+import com.ssj.yunblog.baseInfo.entity.bo.BlogCategoryQueryBo;
 import com.ssj.yunblog.baseInfo.entity.bo.BlogLabelBo;
+import com.ssj.yunblog.baseInfo.entity.vo.BlogCategoryVo;
 import com.ssj.yunblog.baseInfo.entity.vo.BlogLabelVo;
 import com.ssj.yunblog.baseInfo.service.BlogLabelService;
 import com.ssj.yunblog.common.api.Add;
@@ -47,6 +49,14 @@ public class BlogLabelController {
     @GetMapping("/all")
     public Result<List<BlogLabelVo>> queryAllLabels() {
         return blogLabelService.queryAllLabels();
+    }
+
+    /**
+     * 分类id查询标签信息
+     */
+    @GetMapping("/list/{categoryId}")
+    public Result<List<BlogLabelVo>> queryLabelListByCategoryId(@PathVariable String categoryId) {
+        return blogLabelService.queryLabelListByCategoryId(categoryId);
     }
 
 }

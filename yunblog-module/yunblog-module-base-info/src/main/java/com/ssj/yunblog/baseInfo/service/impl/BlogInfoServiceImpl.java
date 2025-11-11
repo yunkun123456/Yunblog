@@ -119,7 +119,7 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
         LambdaQueryWrapper<BlogInfo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(param.getCategoryId() != null && !param.getCategoryId().isEmpty(), BlogInfo::getCategoryId, param.getCategoryId())
                 .eq(param.getLabelId() != null && !param.getLabelId().isEmpty(), BlogInfo::getLabelId, param.getLabelId())
-                .like(param.getTitle() != null && !param.getTitle().isEmpty(), BlogInfo::getTitle, param.getTitle())
+                .like(param.getSearchTitle() != null && !param.getSearchTitle().isEmpty(), BlogInfo::getTitle, param.getSearchTitle())
                 .eq(BlogInfo::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode());
         Page<BlogInfo> page = new Page<>(param.getPageNum(), param.getPageSize());
         IPage<BlogInfo> blogInfoPage = blogInfoDao.selectPage(page, queryWrapper);

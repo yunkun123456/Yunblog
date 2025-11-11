@@ -30,4 +30,9 @@ public interface BlogLabelService extends IService<BlogLabel> {
      * 查询所有标签信息
      */
     Result<List<BlogLabelVo>> queryAllLabels();
+
+    /**
+     * 分类id查询标签信息
+     */
+    Result<List<BlogLabelVo>> queryLabelListByCategoryId(String categoryId);
 }

@@ -76,4 +76,22 @@ public class BlogLabelServiceImpl extends ServiceImpl<BlogLabelDao, BlogLabel> i
         }
         return Result.ok(result);
     }
+
+    /**
+     * 根据分类id查询标签信息
+     */
+    @Override
+    public Result<List<BlogLabelVo>> queryLabelListByCategoryId(String categoryId) {
+        LambdaQueryWrapper<BlogLabel> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(BlogLabel::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode())
+                .eq(categoryId != null && !categoryId.isEmpty(), BlogLabel::getCategoryId, categoryId);
+        List<BlogLabel> blogLabels = blogLabelDao.selectList(queryWrapper);
+        List<BlogLabelVo> result = new ArrayList<>();
+        for (BlogLabel label : blogLabels) {
+            BlogLabelVo vo = new BlogLabelVo();
+            BeanUtils.copyProperties(label, vo);
+            result.add(vo);
+        }
+        return Result.ok(result);
+    }
 }

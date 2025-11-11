@@ -13,11 +13,37 @@ public class SearchRequest {
      */
     private String keyword;
 
+    /**
+     * 索引名称
+     */
+    private String index;
+
+    /**
+     * 集群名称
+     */
+    private String cluster;
+
     public String getKeyword() {
         return keyword;
     }
 
     public void setKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    public String getIndex() {
+        return index;
+    }
+
+    public void setIndex(String index) {
+        this.index = index;
+    }
+
+    public String getCluster() {
+        return cluster;
+    }
+
+    public void setCluster(String cluster) {
+        this.cluster = cluster;
     }
 }

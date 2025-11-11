@@ -1,6 +1,7 @@
 package com.ssj.yunblog.baseInfo.controller;
 
 import com.ssj.yunblog.baseInfo.entity.bo.BlogCategoryBo;
+import com.ssj.yunblog.baseInfo.entity.bo.BlogCategoryQueryBo;
 import com.ssj.yunblog.baseInfo.entity.vo.BlogCategoryVo;
 import com.ssj.yunblog.baseInfo.service.BlogCategoryService;
 import com.ssj.yunblog.common.api.Add;
@@ -30,6 +31,14 @@ public class BlogCategoryController {
     @GetMapping("/all")
     public Result<List<BlogCategoryVo>> queryAllCategory() {
         return blogCategoryService.queryAllCategory();
+    }
+
+    /**
+     * 条件查询分类信息
+     */
+    @GetMapping("/list")
+    public Result<List<BlogCategoryVo>> queryCategoryList(BlogCategoryQueryBo param) {
+        return blogCategoryService.queryCategoryList(param);
     }
 
     /**

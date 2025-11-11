@@ -13,7 +13,7 @@ public class BlogInfoQueryBo {
     /**
      * 标题
      */
-    private String title;
+    private String searchTitle;
     /**
      * 类别id
      */
