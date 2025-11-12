@@ -121,7 +121,8 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
         queryWrapper.eq(param.getCategoryId() != null && !param.getCategoryId().isEmpty(), BlogInfo::getCategoryId, param.getCategoryId())
                 .eq(param.getLabelId() != null && !param.getLabelId().isEmpty(), BlogInfo::getLabelId, param.getLabelId())
                 .like(param.getSearchTitle() != null && !param.getSearchTitle().isEmpty(), BlogInfo::getTitle, param.getSearchTitle())
-                .eq(BlogInfo::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode());
+                .eq(BlogInfo::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode())
+                .orderByDesc(BlogInfo::getLikeNum);
         Page<BlogInfo> page = new Page<>(param.getPageNum(), param.getPageSize());
         IPage<BlogInfo> blogInfoPage = blogInfoDao.selectPage(page, queryWrapper);
         List<BlogInfoVo> records = blogInfoPage.getRecords().stream().map((item) -> {
