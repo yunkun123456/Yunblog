@@ -66,6 +66,7 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
         BlogInfoDetail detail = new BlogInfoDetail();
         BeanUtils.copyProperties(blogInfo, detail);
         info.setReadNum(0);
+        info.setLikeNum(0);
         String labelIds = String.join(",", blogInfo.getTags());
         info.setLabelId(labelIds);
         blogInfoDao.insert(info);

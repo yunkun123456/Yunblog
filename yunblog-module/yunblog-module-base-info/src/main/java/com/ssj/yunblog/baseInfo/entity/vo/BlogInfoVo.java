@@ -33,6 +33,10 @@ public class BlogInfoVo {
      */
     private List<BlogLabelVo> labels;
     /**
+     * 点赞数
+     */
+    private Integer likeNum;
+    /**
      * 阅读量
      */
     private Integer readNum;

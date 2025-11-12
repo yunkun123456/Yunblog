@@ -39,6 +39,10 @@ public class BlogInfo {
      */
     private Integer readNum;
     /**
+     * 点赞数
+     */
+    private Integer likeNum;
+    /**
      * 封面
      */
     private String coverUrl;
