@@ -119,7 +119,7 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
     public Result<IPage<BlogInfoVo>> queryPageList(BlogInfoQueryBo param) {
         LambdaQueryWrapper<BlogInfo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(param.getCategoryId() != null && !param.getCategoryId().isEmpty(), BlogInfo::getCategoryId, param.getCategoryId())
-                .eq(param.getLabelId() != null && !param.getLabelId().isEmpty(), BlogInfo::getLabelId, param.getLabelId())
+                .like(param.getLabelId() != null && !param.getLabelId().isEmpty(), BlogInfo::getLabelId, param.getLabelId())
                 .like(param.getSearchTitle() != null && !param.getSearchTitle().isEmpty(), BlogInfo::getTitle, param.getSearchTitle())
                 .eq(BlogInfo::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode())
                 .orderByDesc(BlogInfo::getLikeNum);
