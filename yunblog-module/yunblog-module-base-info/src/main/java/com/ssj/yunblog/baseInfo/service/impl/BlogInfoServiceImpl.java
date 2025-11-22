@@ -85,6 +85,7 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
             recommend.setIntroduction(info.getIntroduction());
             recommend.setType("0");
             recommend.setWeight(RecommendWeightEnum.MEDIUM.getCode());
+            recommend.setDelStatus(DeleteStatusEnum.UN_DELETED.getCode());
             blogRecommendService.insert(recommend);
         }
         return Result.ok();

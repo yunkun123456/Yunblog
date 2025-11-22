@@ -49,7 +49,7 @@ public class BlogInfo {
     /**
      * 是否推荐
      */
-    private Integer recommend;
+    private String recommend;
     /**
      * 删除标识，0未删除，1已删除
      */

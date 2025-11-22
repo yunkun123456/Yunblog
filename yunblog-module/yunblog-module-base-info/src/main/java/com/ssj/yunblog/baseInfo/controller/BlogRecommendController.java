@@ -1,6 +1,8 @@
 package com.ssj.yunblog.baseInfo.controller;
 
+import com.ssj.yunblog.baseInfo.entity.vo.BlogRecommendVo;
 import com.ssj.yunblog.baseInfo.service.BlogRecommendService;
+import com.ssj.yunblog.common.entity.Result;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,5 +22,12 @@ public class BlogRecommendController {
     @Resource
     private BlogRecommendService blogRecommendService;
 
+    /**
+     * 每日推荐 - 博主推荐
+     */
+    @GetMapping("/daily")
+    public Result<BlogRecommendVo> getDailyRecommend() {
+        return blogRecommendService.getDailyRecommend();
+    }
 }
 

@@ -1,6 +1,5 @@
-package com.ssj.yunblog.baseInfo.entity;
+package com.ssj.yunblog.baseInfo.entity.vo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
@@ -10,8 +9,7 @@ import lombok.Data;
  * @since 2025-11-22 16:36:13
  */
 @Data
-@TableName("t_blog_recommend")
-public class BlogRecommend{
+public class BlogRecommendVo {
     /**
      * 主键
      */
@@ -33,33 +31,21 @@ public class BlogRecommend{
      */
     private String categoryId;
     /**
+     * 类别
+     */
+    private String categoryName;
+    /**
      * 0-默认博客，1-面经，2-项目，3-知识库
      */
     private String type;
     /**
      * 权重
      */
-    private String weight;
-    /**
-     * 删除标识，0未删除，1已删除
-     */
-    private String delStatus;
-    /**
-     * 创建人
-     */
-    private String createBy;
+    private Double recommendWeight;
     /**
      * 创建时间
      */
     private String createTime;
-    /**
-     * 更新人
-     */
-    private String updateBy;
-    /**
-     * 更新时间
-     */
-    private String updateTime;
 
 }
 

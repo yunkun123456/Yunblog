@@ -2,6 +2,8 @@ package com.ssj.yunblog.baseInfo.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ssj.yunblog.baseInfo.entity.BlogRecommend;
+import com.ssj.yunblog.baseInfo.entity.vo.BlogRecommendVo;
+import com.ssj.yunblog.common.entity.Result;
 
 import java.util.List;
 
@@ -22,4 +24,9 @@ public interface BlogRecommendService extends IService<BlogRecommend> {
      * 条件查询博主推荐内容列表
      */
     List<BlogRecommend> queryCondition(Integer size);
+
+    /**
+     * 每日推荐 - 博主推荐
+     */
+    Result<BlogRecommendVo> getDailyRecommend();
 }
