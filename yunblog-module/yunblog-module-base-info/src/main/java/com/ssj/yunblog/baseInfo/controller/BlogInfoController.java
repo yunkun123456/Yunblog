@@ -92,13 +92,5 @@ public class BlogInfoController {
         return blogInfoService.getDailyRecommendHot();
     }
 
-    /**
-     * 每日推荐 - 博客推荐
-     */
-    @GetMapping("/daily/recommend/advise")
-    public Result<BlogInfoVo> getDailyRecommendAdvise() {
-        return blogInfoService.getDailyRecommendAdvise();
-    }
-
 }
 

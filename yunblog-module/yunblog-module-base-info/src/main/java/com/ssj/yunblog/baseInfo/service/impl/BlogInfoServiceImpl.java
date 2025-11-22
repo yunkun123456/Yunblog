@@ -5,14 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ssj.yunblog.baseInfo.dao.BlogCategoryDao;
-import com.ssj.yunblog.baseInfo.dao.BlogInfoDetailDao;
-import com.ssj.yunblog.baseInfo.dao.BlogLabelDao;
-import com.ssj.yunblog.baseInfo.entity.BlogCategory;
-import com.ssj.yunblog.baseInfo.entity.BlogInfo;
-import com.ssj.yunblog.baseInfo.dao.BlogInfoDao;
-import com.ssj.yunblog.baseInfo.entity.BlogInfoDetail;
-import com.ssj.yunblog.baseInfo.entity.BlogLabel;
+import com.ssj.yunblog.baseInfo.dao.*;
+import com.ssj.yunblog.baseInfo.entity.*;
 import com.ssj.yunblog.baseInfo.entity.bo.BlogInfoBo;
 import com.ssj.yunblog.baseInfo.entity.bo.BlogInfoQueryBo;
 import com.ssj.yunblog.baseInfo.entity.vo.BlogCategoryVo;
@@ -20,9 +14,12 @@ import com.ssj.yunblog.baseInfo.entity.vo.BlogInfoDetailVo;
 import com.ssj.yunblog.baseInfo.entity.vo.BlogInfoVo;
 import com.ssj.yunblog.baseInfo.entity.vo.BlogLabelVo;
 import com.ssj.yunblog.baseInfo.service.BlogInfoService;
+import com.ssj.yunblog.baseInfo.service.BlogRecommendService;
 import com.ssj.yunblog.common.entity.Result;
 import com.ssj.yunblog.common.enums.DeleteStatusEnum;
 import com.ssj.yunblog.common.enums.RecommendStatusEnum;
+import com.ssj.yunblog.common.enums.RecommendWeightEnum;
+import com.ssj.yunblog.common.utils.RecommendationCalculator;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -55,6 +52,9 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
     @Resource
     private BlogCategoryDao blogCategoryDao;
 
+    @Resource
+    private BlogRecommendService blogRecommendService;
+
     private final static Integer RECOMMEND_QUERY_SIZE = 10;
 
     /**
@@ -76,6 +76,17 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
         detail.setBlogId(info.getId());
         detail.setDelStatus(DeleteStatusEnum.UN_DELETED.getCode());
         blogInfoDetailDao.insert(detail);
+        // 是否推荐
+        if (!"0".equals(blogInfo.getRecommend())){
+            BlogRecommend recommend = new BlogRecommend();
+            recommend.setRelatedId(info.getId());
+            recommend.setTile(info.getTitle());
+            recommend.setCategoryId(info.getCategoryId());
+            recommend.setIntroduction(info.getIntroduction());
+            recommend.setType("0");
+            recommend.setWeight(RecommendWeightEnum.MEDIUM.getCode());
+            blogRecommendService.insert(recommend);
+        }
         return Result.ok();
     }
 
@@ -204,29 +215,6 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
         queryWrapper.eq(BlogInfo::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode())
                 .orderByDesc(BlogInfo::getLikeNum)
                 .orderByDesc(BlogInfo::getReadNum)
-                .last("limit " + RECOMMEND_QUERY_SIZE);
-        List<BlogInfo> blogInfos = blogInfoDao.selectList(queryWrapper);
-        if (blogInfos.isEmpty()) {
-            return Result.fail("暂无数据！");
-        }
-        int size = Math.min(RECOMMEND_QUERY_SIZE, blogInfos.size());
-        Random random = new Random();
-        int index = random.nextInt(size);
-        BlogInfo blogInfo = blogInfos.get(index);
-        BlogInfoVo result = new BlogInfoVo();
-        BeanUtils.copyProperties(blogInfo, result);
-        return Result.ok(result);
-    }
-
-    /**
-     * 获取每日推荐-博主推荐
-     */
-    @Override
-    public Result<BlogInfoVo> getDailyRecommendAdvise() {
-        LambdaQueryWrapper<BlogInfo> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(BlogInfo::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode())
-                .eq(BlogInfo::getRecommend, RecommendStatusEnum.RECOMMEND.getCode())
-                .orderByDesc(BlogInfo::getCreateTime)
                 .last("limit " + RECOMMEND_QUERY_SIZE);
         List<BlogInfo> blogInfos = blogInfoDao.selectList(queryWrapper);
         if (blogInfos.isEmpty()) {

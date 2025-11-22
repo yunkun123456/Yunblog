@@ -55,9 +55,4 @@ public interface BlogInfoService extends IService<BlogInfo> {
      * 获取每日推荐 最热博客
      */
     Result<BlogInfoVo> getDailyRecommendHot();
-
-    /**
-     * 获取每日推荐 博主推荐
-     */
-    Result<BlogInfoVo> getDailyRecommendAdvise();
 }

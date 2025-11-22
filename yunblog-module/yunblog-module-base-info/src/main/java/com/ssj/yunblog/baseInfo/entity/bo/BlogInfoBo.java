@@ -51,6 +51,10 @@ public class BlogInfoBo {
      */
     private String coverUrl;
     /**
+     * 是否推荐,0-不推荐，1-权重低，2-权重中，3权重高(后续扩展)
+     */
+    private String recommend;
+    /**
      * 博客内容
      */
     @NotBlank(message = "博客内容不能为空！", groups = {Add.class, Update.class})
