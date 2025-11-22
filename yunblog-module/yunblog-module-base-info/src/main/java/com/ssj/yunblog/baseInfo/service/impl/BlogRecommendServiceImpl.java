@@ -95,6 +95,7 @@ public class BlogRecommendServiceImpl extends ServiceImpl<BlogRecommendDao, Blog
         BlogRecommendVo result = list.get(index);
         BlogCategory category = blogCategoryDao.selectById(result.getCategoryId());
         result.setCategoryName(category.getCategoryName());
+        result.setCreateTime(result.getCreateTime().substring(0, 10));
         return Result.ok(result);
     }
 
