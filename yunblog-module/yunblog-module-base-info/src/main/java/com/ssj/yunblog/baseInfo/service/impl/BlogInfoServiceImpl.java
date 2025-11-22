@@ -80,7 +80,7 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
         if (!"0".equals(blogInfo.getRecommend())){
             BlogRecommend recommend = new BlogRecommend();
             recommend.setRelatedId(info.getId());
-            recommend.setTile(info.getTitle());
+            recommend.setTitle(info.getTitle());
             recommend.setCategoryId(info.getCategoryId());
             recommend.setIntroduction(info.getIntroduction());
             recommend.setType("0");

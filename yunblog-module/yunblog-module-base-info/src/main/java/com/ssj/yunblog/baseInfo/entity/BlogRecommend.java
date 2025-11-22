@@ -19,7 +19,7 @@ public class BlogRecommend{
     /**
      * 标题
      */
-    private String tile;
+    private String title;
     /**
      * 关联id
      */
