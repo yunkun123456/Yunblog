@@ -22,6 +22,7 @@ import com.ssj.yunblog.baseInfo.entity.vo.BlogLabelVo;
 import com.ssj.yunblog.baseInfo.service.BlogInfoService;
 import com.ssj.yunblog.common.entity.Result;
 import com.ssj.yunblog.common.enums.DeleteStatusEnum;
+import com.ssj.yunblog.common.enums.RecommendStatusEnum;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Random;
 
 
 /**
@@ -53,6 +54,8 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
 
     @Resource
     private BlogCategoryDao blogCategoryDao;
+
+    private final static Integer RECOMMEND_QUERY_SIZE = 10;
 
     /**
      * 新增博客信息
@@ -167,6 +170,74 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
         BlogInfoDetail detail = blogInfoDetailDao.selectOne(queryWrapper);
         BlogInfoDetailVo result = new BlogInfoDetailVo();
         BeanUtils.copyProperties(detail, result);
+        return Result.ok(result);
+    }
+
+    /**
+     * 获取每日推荐-最新
+     */
+    @Override
+    public Result<BlogInfoVo> getDailyRecommendNew() {
+        LambdaQueryWrapper<BlogInfo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(BlogInfo::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode())
+                .orderByDesc(BlogInfo::getCreateTime)
+                .last("limit " + RECOMMEND_QUERY_SIZE);
+        List<BlogInfo> blogInfos = blogInfoDao.selectList(queryWrapper);
+        if (blogInfos.isEmpty()) {
+            return Result.fail("暂无数据！");
+        }
+        int size = Math.min(RECOMMEND_QUERY_SIZE, blogInfos.size());
+        Random random = new Random();
+        int index = random.nextInt(size);
+        BlogInfo blogInfo = blogInfos.get(index);
+        BlogInfoVo result = new BlogInfoVo();
+        BeanUtils.copyProperties(blogInfo, result);
+        return Result.ok(result);
+    }
+
+    /**
+     * 获取每日推荐-最热
+     */
+    @Override
+    public Result<BlogInfoVo> getDailyRecommendHot() {
+        LambdaQueryWrapper<BlogInfo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(BlogInfo::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode())
+                .orderByDesc(BlogInfo::getLikeNum)
+                .orderByDesc(BlogInfo::getReadNum)
+                .last("limit " + RECOMMEND_QUERY_SIZE);
+        List<BlogInfo> blogInfos = blogInfoDao.selectList(queryWrapper);
+        if (blogInfos.isEmpty()) {
+            return Result.fail("暂无数据！");
+        }
+        int size = Math.min(RECOMMEND_QUERY_SIZE, blogInfos.size());
+        Random random = new Random();
+        int index = random.nextInt(size);
+        BlogInfo blogInfo = blogInfos.get(index);
+        BlogInfoVo result = new BlogInfoVo();
+        BeanUtils.copyProperties(blogInfo, result);
+        return Result.ok(result);
+    }
+
+    /**
+     * 获取每日推荐-博主推荐
+     */
+    @Override
+    public Result<BlogInfoVo> getDailyRecommendAdvise() {
+        LambdaQueryWrapper<BlogInfo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(BlogInfo::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode())
+                .eq(BlogInfo::getRecommend, RecommendStatusEnum.RECOMMEND.getCode())
+                .orderByDesc(BlogInfo::getCreateTime)
+                .last("limit " + RECOMMEND_QUERY_SIZE);
+        List<BlogInfo> blogInfos = blogInfoDao.selectList(queryWrapper);
+        if (blogInfos.isEmpty()) {
+            return Result.fail("暂无数据！");
+        }
+        int size = Math.min(RECOMMEND_QUERY_SIZE, blogInfos.size());
+        Random random = new Random();
+        int index = random.nextInt(size);
+        BlogInfo blogInfo = blogInfos.get(index);
+        BlogInfoVo result = new BlogInfoVo();
+        BeanUtils.copyProperties(blogInfo, result);
         return Result.ok(result);
     }
 }

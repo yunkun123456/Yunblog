@@ -76,5 +76,29 @@ public class BlogInfoController {
         return blogInfoService.queryDetail(id);
     }
 
+    /**
+     * 每日推荐 - 最新博客
+     */
+    @GetMapping("/daily/recommend/new")
+    public Result<BlogInfoVo> getDailyRecommendNew() {
+        return blogInfoService.getDailyRecommendNew();
+    }
+
+    /**
+     * 每日推荐 - 最热博客
+     */
+    @GetMapping("/daily/recommend/hot")
+    public Result<BlogInfoVo> getDailyRecommendHot() {
+        return blogInfoService.getDailyRecommendHot();
+    }
+
+    /**
+     * 每日推荐 - 博客推荐
+     */
+    @GetMapping("/daily/recommend/advise")
+    public Result<BlogInfoVo> getDailyRecommendAdvise() {
+        return blogInfoService.getDailyRecommendAdvise();
+    }
+
 }
 

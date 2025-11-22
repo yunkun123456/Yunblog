@@ -47,6 +47,10 @@ public class BlogInfo {
      */
     private String coverUrl;
     /**
+     * 是否推荐
+     */
+    private Integer recommend;
+    /**
      * 删除标识，0未删除，1已删除
      */
     private String delStatus;
