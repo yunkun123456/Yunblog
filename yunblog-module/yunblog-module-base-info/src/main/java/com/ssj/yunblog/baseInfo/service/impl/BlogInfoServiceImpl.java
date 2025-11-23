@@ -163,6 +163,7 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
             BlogCategoryVo categoryVo = new BlogCategoryVo();
             BeanUtils.copyProperties(category, categoryVo);
             infoVo.setCategory(categoryVo);
+            infoVo.setCreateTime(item.getCreateTime().toString().substring(0, 10));
             return infoVo;
         }).toList();
         Page<BlogInfoVo> result = new Page<>();
