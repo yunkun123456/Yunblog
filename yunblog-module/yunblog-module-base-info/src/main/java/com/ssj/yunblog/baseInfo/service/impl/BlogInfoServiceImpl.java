@@ -77,7 +77,7 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
         detail.setDelStatus(DeleteStatusEnum.UN_DELETED.getCode());
         blogInfoDetailDao.insert(detail);
         // 是否推荐
-        if (!"0".equals(blogInfo.getRecommend())){
+        if (!"0".equals(blogInfo.getRecommend())) {
             BlogRecommend recommend = new BlogRecommend();
             recommend.setRelatedId(info.getId());
             recommend.setTitle(info.getTitle());
@@ -204,6 +204,12 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
         BlogInfo blogInfo = blogInfos.get(index);
         BlogInfoVo result = new BlogInfoVo();
         BeanUtils.copyProperties(blogInfo, result);
+        result.setCreateTime(blogInfo.getCreateTime().toString().substring(0, 10));
+        LambdaQueryWrapper<BlogLabel> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(BlogLabel::getId, Arrays.stream(blogInfo.getLabelId().split(",")).toList())
+                .eq(BlogLabel::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode());
+        List<BlogLabel> blogLabels = blogLabelDao.selectList(wrapper);
+        result.setTags(blogLabels.stream().map(BlogLabel::getLabelName).toList());
         return Result.ok(result);
     }
 
@@ -227,6 +233,12 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
         BlogInfo blogInfo = blogInfos.get(index);
         BlogInfoVo result = new BlogInfoVo();
         BeanUtils.copyProperties(blogInfo, result);
+        result.setCreateTime(blogInfo.getCreateTime().toString().substring(0, 10));
+        LambdaQueryWrapper<BlogLabel> wrapper = new LambdaQueryWrapper<>();
+        wrapper.in(BlogLabel::getId, Arrays.stream(blogInfo.getLabelId().split(",")).toList())
+                .eq(BlogLabel::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode());
+        List<BlogLabel> blogLabels = blogLabelDao.selectList(wrapper);
+        result.setTags(blogLabels.stream().map(BlogLabel::getLabelName).toList());
         return Result.ok(result);
     }
 }

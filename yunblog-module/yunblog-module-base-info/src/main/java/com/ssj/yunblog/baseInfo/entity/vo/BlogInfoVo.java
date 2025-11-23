@@ -45,6 +45,10 @@ public class BlogInfoVo {
      */
     private String coverUrl;
     /**
+     * 标签列表
+     */
+    private List<String> tags;
+    /**
      * 删除标识，0未删除，1已删除
      */
     private String delStatus;

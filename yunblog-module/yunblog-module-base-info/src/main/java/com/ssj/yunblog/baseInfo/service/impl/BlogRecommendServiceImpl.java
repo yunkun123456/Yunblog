@@ -84,9 +84,10 @@ public class BlogRecommendServiceImpl extends ServiceImpl<BlogRecommendDao, Blog
                     BigDecimal.valueOf(
                             RecommendationCalculator.calculateRecommendation(
                                     Objects.requireNonNull(RecommendWeightEnum.getByCode(item.getWeight())),
-                                    stringToTimestamp(item.getCreateTime().toString(), PATTERN_DATE_TIME))
+                                    item.getCreateTime().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
                     ).setScale(2, RoundingMode.HALF_UP).doubleValue()
             );
+            recommendVo.setCreateTime(item.getCreateTime().toString().substring(0, 10));
             return recommendVo;
         }).sorted(Comparator.comparingDouble(BlogRecommendVo::getRecommendWeight)).toList();
         int size = Math.min(RECOMMEND_QUERY_SIZE, list.size());
@@ -95,7 +96,7 @@ public class BlogRecommendServiceImpl extends ServiceImpl<BlogRecommendDao, Blog
         BlogRecommendVo result = list.get(index);
         BlogCategory category = blogCategoryDao.selectById(result.getCategoryId());
         result.setCategoryName(category.getCategoryName());
-        result.setCreateTime(result.getCreateTime().substring(0, 10));
+        result.setCreateTime(result.getCreateTime());
         return Result.ok(result);
     }
 
