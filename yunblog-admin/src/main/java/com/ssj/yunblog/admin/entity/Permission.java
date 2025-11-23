@@ -1,7 +1,11 @@
 package com.ssj.yunblog.admin.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 
 /**
  * 权限实体类
@@ -31,19 +35,23 @@ public class Permission {
     /**
      * 创建人
      */
+    @TableField(fill = FieldFill.INSERT)
     private String createBy;
     /**
      * 创建时间
      */
-    private String createTime;
+    @TableField(fill = FieldFill.INSERT)
+    private LocalDateTime createTime;
     /**
      * 更新人
      */
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private String updateBy;
     /**
      * 更新时间
      */
-    private String updateTime;
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime updateTime;
 
 }
 
