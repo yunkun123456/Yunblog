@@ -84,7 +84,7 @@ public class BlogRecommendServiceImpl extends ServiceImpl<BlogRecommendDao, Blog
                     BigDecimal.valueOf(
                             RecommendationCalculator.calculateRecommendation(
                                     Objects.requireNonNull(RecommendWeightEnum.getByCode(item.getWeight())),
-                                    stringToTimestamp(item.getCreateTime(), PATTERN_DATE_TIME))
+                                    stringToTimestamp(item.getCreateTime().toString(), PATTERN_DATE_TIME))
                     ).setScale(2, RoundingMode.HALF_UP).doubleValue()
             );
             return recommendVo;
