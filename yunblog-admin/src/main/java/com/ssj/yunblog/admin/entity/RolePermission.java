@@ -33,19 +33,19 @@ public class RolePermission {
     /**
      * 创建人
      */
-    private String createdBy;
+    private String createBy;
     /**
      * 创建时间
      */
-    private Date createdTime;
+    private Date createTime;
     /**
      * 更新人
      */
-    private String updatedBy;
+    private String updateBy;
     /**
      * 更新时间
      */
-    private Date updatedTime;
+    private Date updateTime;
 
 }
 
