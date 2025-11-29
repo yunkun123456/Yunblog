@@ -92,5 +92,16 @@ public class BlogInfoController {
         return blogInfoService.getDailyRecommendHot();
     }
 
+    /**
+     * 点赞
+     */
+    @GetMapping("/like")
+    public Result<Boolean> giveALike(String blogId, Integer status) {
+        if (blogId == null || blogId.isEmpty() || status == null) {
+            return Result.fail("点赞失败!");
+        }
+        return blogInfoService.giveALike(blogId, status);
+    }
+
 }
 

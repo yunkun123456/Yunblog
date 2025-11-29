@@ -1,5 +1,6 @@
 package com.ssj.yunblog.baseInfo.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -15,6 +16,7 @@ import com.ssj.yunblog.baseInfo.entity.vo.BlogInfoVo;
 import com.ssj.yunblog.baseInfo.entity.vo.BlogLabelVo;
 import com.ssj.yunblog.baseInfo.service.BlogInfoService;
 import com.ssj.yunblog.baseInfo.service.BlogRecommendService;
+import com.ssj.yunblog.common.constant.RedisKey;
 import com.ssj.yunblog.common.entity.Result;
 import com.ssj.yunblog.common.enums.DeleteStatusEnum;
 import com.ssj.yunblog.common.enums.RecommendStatusEnum;
@@ -22,6 +24,7 @@ import com.ssj.yunblog.common.enums.RecommendWeightEnum;
 import com.ssj.yunblog.common.utils.RecommendationCalculator;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +57,9 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
 
     @Resource
     private BlogRecommendService blogRecommendService;
+
+    @Resource
+    private RedisTemplate<String, Object> redisTemplate;
 
     private final static Integer RECOMMEND_QUERY_SIZE = 10;
 
@@ -140,6 +146,7 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
                 .orderByDesc(BlogInfo::getLikeNum);
         Page<BlogInfo> page = new Page<>(param.getPageNum(), param.getPageSize());
         IPage<BlogInfo> blogInfoPage = blogInfoDao.selectPage(page, queryWrapper);
+        String loginId = StpUtil.getLoginId().toString();
         List<BlogInfoVo> records = blogInfoPage.getRecords().stream().map((item) -> {
             BlogInfoVo infoVo = new BlogInfoVo();
             BeanUtils.copyProperties(item, infoVo);
@@ -164,6 +171,10 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
             BeanUtils.copyProperties(category, categoryVo);
             infoVo.setCategory(categoryVo);
             infoVo.setCreateTime(item.getCreateTime().toString().substring(0, 10));
+            // 判断用户是否点赞
+            String key = loginId + "_" + item.getId();
+            Integer status = (Integer) redisTemplate.opsForValue().get(key);
+            infoVo.setLikeFlag(status != null && status == 1);
             return infoVo;
         }).toList();
         Page<BlogInfoVo> result = new Page<>();
@@ -179,7 +190,7 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
     public Result<BlogInfoDetailVo> queryDetail(String blogId) {
         BlogInfo info = new BlogInfo();
         BlogInfo blogInfo = blogInfoDao.selectById(blogId);
-        if (blogInfo == null){
+        if (blogInfo == null) {
             return Result.fail("博客不存在！");
         }
         Integer readNum = blogInfo.getReadNum();
@@ -250,5 +261,33 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
         List<BlogLabel> blogLabels = blogLabelDao.selectList(wrapper);
         result.setTags(blogLabels.stream().map(BlogLabel::getLabelName).toList());
         return Result.ok(result);
+    }
+
+    /**
+     * 点赞
+     */
+    @Override
+    public Result<Boolean> giveALike(String blogId, Integer status) {
+        String userId = (String) StpUtil.getLoginId();
+        if (userId == null) {
+            return Result.fail("请登录后操作！");
+        }
+        String key = userId + "_" + blogId;
+        Integer oldValue = (Integer) redisTemplate.opsForValue().get(key);
+        redisTemplate.opsForValue().set(key, status);
+        // 这边还是要校验以下数值
+        if (oldValue == null) {
+            // 用户第一次操作
+            if (status != 1) {
+                return Result.fail("请点赞后再取消点赞");
+            }
+            redisTemplate.opsForHash().increment(RedisKey.BLOG_LIKES, blogId, 1);
+        } else {
+            if (!oldValue.equals(status)) {
+                int count = status == 1 ? 1 : -1;
+                redisTemplate.opsForHash().increment(RedisKey.BLOG_LIKES, blogId, count);
+            }
+        }
+        return Result.ok(true);
     }
 }

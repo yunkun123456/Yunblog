@@ -37,6 +37,10 @@ public class BlogInfoVo {
      */
     private Integer likeNum;
     /**
+     * 是否点赞
+     */
+    private Boolean likeFlag;
+    /**
      * 阅读量
      */
     private Integer readNum;
