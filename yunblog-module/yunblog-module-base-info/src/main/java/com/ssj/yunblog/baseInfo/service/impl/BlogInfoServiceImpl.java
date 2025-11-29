@@ -177,6 +177,15 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
      */
     @Override
     public Result<BlogInfoDetailVo> queryDetail(String blogId) {
+        BlogInfo info = new BlogInfo();
+        BlogInfo blogInfo = blogInfoDao.selectById(blogId);
+        if (blogInfo == null){
+            return Result.fail("博客不存在！");
+        }
+        Integer readNum = blogInfo.getReadNum();
+        info.setReadNum(readNum + 1);
+        info.setId(blogId);
+        blogInfoDao.updateById(info);
         LambdaQueryWrapper<BlogInfoDetail> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(BlogInfoDetail::getBlogId, blogId)
                 .eq(BlogInfoDetail::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode());
