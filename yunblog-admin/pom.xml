@@ -59,11 +59,53 @@
         </dependency>
     </dependencies>
 
+    <!-- 环境配置区域：定义不同环境的打包参数 -->
+    <profiles>
+        <!-- 开发环境配置 -->
+        <profile>
+            <id>dev</id>  <!-- 环境标识，用于命令行 -P 参数 -->
+            <properties>
+                <profiles.active>dev</profiles.active>  <!-- 激活的 Spring 环境 -->
+                <packaging.type>jar</packaging.type>    <!-- 打包类型 -->
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>  <!-- 默认激活此环境 -->
+            </activation>
+        </profile>
+
+        <!-- 生产环境配置 -->
+        <profile>
+            <id>prod</id>
+            <properties>
+                <profiles.active>prod</profiles.active>  <!-- 生产环境标识 -->
+                <packaging.type>jar</packaging.type>
+            </properties>
+        </profile>
+    </profiles>
+
+    <!-- 构建配置区域 -->
     <build>
+        <!-- 资源文件处理配置 -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>  <!-- 资源文件目录 -->
+                <filtering>true</filtering>  <!-- 启用占位符替换 -->
+                <includes>
+                    <include>**/*.xml</include>        <!-- 包含 XML 文件 -->
+                    <include>**/*.yml</include>        <!-- 包含 YML 文件 -->
+                </includes>
+            </resource>
+        </resources>
+
+        <!-- 插件配置 -->
         <plugins>
+            <!-- Spring Boot 打包插件 -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <classifier>exec</classifier>  <!-- 生成可执行 JAR -->
+                </configuration>
             </plugin>
         </plugins>
     </build>
