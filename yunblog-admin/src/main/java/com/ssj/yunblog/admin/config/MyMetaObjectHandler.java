@@ -1,5 +1,6 @@
 package com.ssj.yunblog.admin.config;
 
+import cn.dev33.satoken.exception.SaTokenContextException;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import org.apache.ibatis.reflection.MetaObject;
@@ -53,6 +54,15 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
      * 获取当前用户登录id
      */
     private String getCurrentLoginId() {
-        return StpUtil.getLoginId().toString(); // 默认值
+        try {
+            Object loginId = StpUtil.getLoginId();
+            if(loginId != null){
+                return loginId.toString();
+            }
+        }catch (SaTokenContextException se){
+            // TODO 目前没想到其他好方法
+            return "1959249411166965761"; // 默认值
+        }
+        return "1959249411166965761"; // 默认值
     }
 }
