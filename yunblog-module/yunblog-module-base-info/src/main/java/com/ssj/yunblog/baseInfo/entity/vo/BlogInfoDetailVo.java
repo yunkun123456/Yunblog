@@ -2,6 +2,8 @@ package com.ssj.yunblog.baseInfo.entity.vo;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * (BlogInfoDetail)实体类
  *
@@ -19,6 +21,34 @@ public class BlogInfoDetailVo {
      */
     private String blogId;
     /**
+     * 博客标题
+     */
+    private String title;
+    /**
+     * 博客封面
+     */
+    private String coverUrl;
+    /**
+     * 文章介绍
+     */
+    private String introduction;
+    /**
+     * 博客一级分类
+     */
+    private String primaryCategoryId;
+    /**
+     * 博客二级分类
+     */
+    private String categoryId;
+    /**
+     * 博客标签列表
+     */
+    private List<String> labels;
+    /**
+     * 是否推荐,0-不推荐，1-权重低，2-权重中，3权重高(后续扩展)
+     */
+    private String recommend;
+    /**
      * 博客内容
      */
     private String content;
@@ -26,26 +56,5 @@ public class BlogInfoDetailVo {
      * 图片地址
      */
     private String picUrl;
-    /**
-     * 删除标识，0未删除，1已删除
-     */
-    private String delStatus;
-    /**
-     * 创建人
-     */
-    private String createBy;
-    /**
-     * 创建时间
-     */
-    private String createTime;
-    /**
-     * 更新人
-     */
-    private String updateBy;
-    /**
-     * 更新时间
-     */
-    private String updateTime;
-
 }
 

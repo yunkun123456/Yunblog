@@ -105,12 +105,13 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
     public Result<Boolean> edit(BlogInfoBo blogInfo) {
         BlogInfo info = new BlogInfo();
         BeanUtils.copyProperties(blogInfo, info);
+        info.setLabelId(String.join(",",blogInfo.getTags()));
         blogInfoDao.updateById(info);
         String blogId = info.getId();
         LambdaUpdateWrapper<BlogInfoDetail> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.eq(BlogInfoDetail::getBlogId, blogId)
                 .set(!blogInfo.getContent().isEmpty(), BlogInfoDetail::getContent, blogInfo.getContent())
-                .set(!blogInfo.getPicUrl().isEmpty(), BlogInfoDetail::getPicUrl, blogInfo.getPicUrl());
+                .set(blogInfo.getPicUrl() != null && !blogInfo.getPicUrl().isEmpty(), BlogInfoDetail::getPicUrl, blogInfo.getPicUrl());
         blogInfoDetailDao.update(updateWrapper);
         return Result.ok();
     }
@@ -203,6 +204,14 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
         BlogInfoDetail detail = blogInfoDetailDao.selectOne(queryWrapper);
         BlogInfoDetailVo result = new BlogInfoDetailVo();
         BeanUtils.copyProperties(detail, result);
+        result.setTitle(blogInfo.getTitle());
+        result.setIntroduction(blogInfo.getIntroduction());
+        result.setCoverUrl(blogInfo.getCoverUrl());
+        result.setCategoryId(blogInfo.getCategoryId());
+        result.setLabels(Arrays.stream(blogInfo.getLabelId().split(",")).toList());
+        BlogCategory category = blogCategoryDao.selectById(blogInfo.getCategoryId());
+        result.setPrimaryCategoryId(category.getParentId());
+        result.setRecommend(blogInfo.getRecommend());
         return Result.ok(result);
     }
 
