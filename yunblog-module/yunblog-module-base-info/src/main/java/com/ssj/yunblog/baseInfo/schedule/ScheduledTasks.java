@@ -25,7 +25,7 @@ public class ScheduledTasks {
     @Scheduled(fixedRate = 5000)
     public void taskWithFixedRate() {
         log.info("固定速率任务执行，当前时间：{}", LocalDateTime.now());
-        scheduledTasksImpl.generateCoverPic();
+//        scheduledTasksImpl.generateCoverPic();
     }
 
     /**
@@ -36,5 +36,6 @@ public class ScheduledTasks {
     @Scheduled(cron = "0 0 0 * * ?")
     public void taskWithCronExpression() {
         log.info("Cron表达式任务执行，当前时间：{}", LocalDateTime.now());
+        scheduledTasksImpl.generateCoverPic();
     }
 }
