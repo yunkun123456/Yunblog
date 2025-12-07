@@ -36,7 +36,9 @@ public class ScheduledTasksImpl {
         LambdaQueryWrapper<BlogInfo> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(BlogInfo::getRecommend, RecommendStatusEnum.RECOMMEND.getCode())
                 .eq(BlogInfo::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode())
-                .isNull(BlogInfo::getCoverUrl);
+                .and(w -> w.isNull(BlogInfo::getCoverUrl)
+                        .or()
+                        .eq(BlogInfo::getCoverUrl, ""));
         List<BlogInfo> blogInfos = blogInfoDao.selectList(wrapper);
         for (BlogInfo blogInfo : blogInfos) {
             String blogId = blogInfo.getId();
