@@ -22,11 +22,11 @@ public class ScheduledTasks {
      * 固定频率执行：每5秒执行一次
      * fixedRate：固定速率，从任务开始时间计算间隔
      */
-    @Scheduled(fixedRate = 5000)
-    public void taskWithFixedRate() {
-        log.info("固定速率任务执行，当前时间：{}", LocalDateTime.now());
-//        scheduledTasksImpl.generateCoverPic();
-    }
+//    @Scheduled(fixedRate = 5000)
+//    public void taskWithFixedRate() {
+//        log.info("固定速率任务执行，当前时间：{}", LocalDateTime.now());
+////        scheduledTasksImpl.generateCoverPic();
+//    }
 
     /**
      * Cron 表达式执行：每天凌晨执行
