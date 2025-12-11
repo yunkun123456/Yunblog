@@ -58,7 +58,6 @@ public class BlogInfoBo {
      * 博客内容
      */
     @NotBlank(message = "博客内容不能为空！", groups = {Add.class, Update.class})
-    @Size(max = 2000, message = "博客内容长度不能超过2000！", groups = {Add.class, Update.class})
     private String content;
     /**
      * 图片地址
