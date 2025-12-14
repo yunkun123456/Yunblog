@@ -36,7 +36,7 @@ public class ScheduledTasks {
      */
     @Scheduled(cron = "0 0 0 * * ?")
     public void taskWithCronExpression() {
-        log.info("Cron表达式任务执行，当前时间：{}", LocalDateTime.now());
+        log.info("文生图-封面，当前时间：{}", LocalDateTime.now());
         scheduledTasksImpl.generateCoverPic();
     }
 
