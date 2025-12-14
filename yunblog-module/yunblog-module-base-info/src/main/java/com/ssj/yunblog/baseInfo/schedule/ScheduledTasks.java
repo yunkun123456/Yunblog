@@ -5,6 +5,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * 定时任务
@@ -37,5 +38,16 @@ public class ScheduledTasks {
     public void taskWithCronExpression() {
         log.info("Cron表达式任务执行，当前时间：{}", LocalDateTime.now());
         scheduledTasksImpl.generateCoverPic();
+    }
+
+    /**
+     * Cron 表达式执行：每天凌晨执行
+     * Cron 表达式格式：秒 分 时 日 月 周 年（可选）
+     * 定时同步点赞信息
+     */
+    @Scheduled(cron = "0 */30 * * * ?")
+    public void syncRedisLikes() {
+        log.info("点赞信息同步，当前时间：{}", LocalDateTime.now());
+        scheduledTasksImpl.syncRedisLikes();
     }
 }
