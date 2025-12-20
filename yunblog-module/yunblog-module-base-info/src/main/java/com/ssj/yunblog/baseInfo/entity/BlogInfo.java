@@ -77,5 +77,10 @@ public class BlogInfo {
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
+
+    /**
+     * 作者名称
+     */
+    private String authorName;
 }
 

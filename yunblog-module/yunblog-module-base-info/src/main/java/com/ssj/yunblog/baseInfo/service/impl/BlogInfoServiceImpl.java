@@ -79,6 +79,9 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
         info.setLikeNum(0);
         String labelIds = String.join(",", blogInfo.getTags());
         info.setLabelId(labelIds);
+        // 插入作者信息
+        String authorName = (String)StpUtil.getSession().get("username");
+        info.setAuthorName(authorName);
         blogInfoDao.insert(info);
         detail.setBlogId(info.getId());
         detail.setDelStatus(DeleteStatusEnum.UN_DELETED.getCode());
@@ -246,6 +249,7 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
         BlogInfo blogInfo = blogInfos.get(index);
         BlogInfoVo result = new BlogInfoVo();
         BeanUtils.copyProperties(blogInfo, result);
+        result.setCreateBy(blogInfo.getAuthorName());
         result.setCreateTime(blogInfo.getCreateTime().toString().substring(0, 10));
         LambdaQueryWrapper<BlogLabel> wrapper = new LambdaQueryWrapper<>();
         wrapper.in(BlogLabel::getId, Arrays.stream(blogInfo.getLabelId().split(",")).toList())

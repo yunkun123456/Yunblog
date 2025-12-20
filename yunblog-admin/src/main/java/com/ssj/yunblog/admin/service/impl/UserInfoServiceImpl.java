@@ -106,6 +106,8 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
         }
         // 创建会话
         StpUtil.login(list.getFirst().getId());
+        // 存储用户名称
+        StpUtil.getSession().set("username", list.getFirst().getNickName());
         // 存在将用户角色和权限保存到Redis中
         redisTemplate.opsForValue().set(RedisKey.ROLE_KEY + StpUtil.getLoginId(), list.getFirst().getRoleCode());
         // 权限信息保存
