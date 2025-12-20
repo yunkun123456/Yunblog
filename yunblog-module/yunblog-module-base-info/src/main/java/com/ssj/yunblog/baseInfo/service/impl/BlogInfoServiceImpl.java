@@ -1,5 +1,6 @@
 package com.ssj.yunblog.baseInfo.service.impl;
 
+import cn.dev33.satoken.exception.NotLoginException;
 import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -105,7 +106,7 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
     public Result<Boolean> edit(BlogInfoBo blogInfo) {
         BlogInfo info = new BlogInfo();
         BeanUtils.copyProperties(blogInfo, info);
-        info.setLabelId(String.join(",",blogInfo.getTags()));
+        info.setLabelId(String.join(",", blogInfo.getTags()));
         blogInfoDao.updateById(info);
         String blogId = info.getId();
         LambdaUpdateWrapper<BlogInfoDetail> updateWrapper = new LambdaUpdateWrapper<>();
@@ -147,7 +148,13 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
                 .orderByDesc(BlogInfo::getLikeNum);
         Page<BlogInfo> page = new Page<>(param.getPageNum(), param.getPageSize());
         IPage<BlogInfo> blogInfoPage = blogInfoDao.selectPage(page, queryWrapper);
-        String loginId = StpUtil.getLoginId().toString();
+        boolean login = StpUtil.isLogin();
+        String loginId;
+        if (login) {
+            loginId = StpUtil.getLoginId().toString();
+        } else {
+            loginId = "";
+        }
         List<BlogInfoVo> records = blogInfoPage.getRecords().stream().map((item) -> {
             BlogInfoVo infoVo = new BlogInfoVo();
             BeanUtils.copyProperties(item, infoVo);
@@ -173,9 +180,14 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
             infoVo.setCategory(categoryVo);
             infoVo.setCreateTime(item.getCreateTime().toString().substring(0, 10));
             // 判断用户是否点赞
-            String key = loginId + "_" + item.getId();
-            Integer status = (Integer) redisTemplate.opsForValue().get(key);
-            infoVo.setLikeFlag(status != null && status == 1);
+            if (login) {
+                String key = loginId + "_" + item.getId();
+                Integer status = (Integer) redisTemplate.opsForValue().get(key);
+                infoVo.setLikeFlag(status != null && status == 1);
+            } else {
+                // 未登录 默认未点赞
+                infoVo.setLikeFlag(false);
+            }
             return infoVo;
         }).toList();
         Page<BlogInfoVo> result = new Page<>();
