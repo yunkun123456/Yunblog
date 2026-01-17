@@ -4,10 +4,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ssj.yunblog.baseInfo.entity.Knowledge;
 import com.ssj.yunblog.baseInfo.entity.bo.KnowledgeBo;
+import com.ssj.yunblog.baseInfo.entity.bo.KnowledgeDetailBo;
 import com.ssj.yunblog.baseInfo.entity.bo.KnowledgeInfoBo;
 import com.ssj.yunblog.baseInfo.entity.bo.KnowledgeQueryBo;
+import com.ssj.yunblog.baseInfo.entity.vo.KnowledgeInfoVo;
 import com.ssj.yunblog.baseInfo.entity.vo.KnowledgeVo;
 import com.ssj.yunblog.common.entity.Result;
+
+import java.util.List;
 
 /**
  * 知识库服务接口
@@ -31,4 +35,39 @@ public interface KnowledgeService extends IService<Knowledge> {
      * 新增分组或文章
      */
     Result<Boolean> addGroupOrArticle(KnowledgeInfoBo knowledgeInfoBo);
+
+    /**
+     * 新增文章内容
+     */
+    Result<Boolean> addArticleDetail(KnowledgeDetailBo knowledgeDetailBo);
+
+    /**
+     * 更新知识库
+     */
+    Result<Boolean> updateKnowledge(KnowledgeBo knowledge);
+
+    /**
+     * 查询知识库下级信息列表
+     */
+    Result<List<KnowledgeInfoVo>> queryLowList(String id);
+
+    /**
+     * 删除知识库
+     */
+    Result<Boolean> deleteKnowledge(String id);
+
+    /**
+     * 更新分组或文章
+     */
+    Result<Boolean> updateGroupOrArticle(KnowledgeInfoBo knowledgeInfoBo);
+
+    /**
+     * 删除分组或文章
+     */
+    Result<Boolean> deleteGroupOrArticle(String id);
+
+    /**
+     * 更新文章内容
+     */
+    Result<Boolean> updateArticleDetail(KnowledgeDetailBo knowledgeDetailBo);
 }

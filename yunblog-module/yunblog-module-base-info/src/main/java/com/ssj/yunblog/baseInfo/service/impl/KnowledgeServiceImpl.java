@@ -4,14 +4,17 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ssj.yunblog.baseInfo.dao.KnowledgeDetailDao;
 import com.ssj.yunblog.baseInfo.dao.KnowledgeInfoDao;
-import com.ssj.yunblog.baseInfo.entity.BlogInfo;
 import com.ssj.yunblog.baseInfo.entity.Knowledge;
 import com.ssj.yunblog.baseInfo.dao.KnowledgeDao;
+import com.ssj.yunblog.baseInfo.entity.KnowledgeDetail;
 import com.ssj.yunblog.baseInfo.entity.KnowledgeInfo;
 import com.ssj.yunblog.baseInfo.entity.bo.KnowledgeBo;
+import com.ssj.yunblog.baseInfo.entity.bo.KnowledgeDetailBo;
 import com.ssj.yunblog.baseInfo.entity.bo.KnowledgeInfoBo;
 import com.ssj.yunblog.baseInfo.entity.bo.KnowledgeQueryBo;
+import com.ssj.yunblog.baseInfo.entity.vo.KnowledgeInfoVo;
 import com.ssj.yunblog.baseInfo.entity.vo.KnowledgeVo;
 import com.ssj.yunblog.baseInfo.service.KnowledgeService;
 import com.ssj.yunblog.common.entity.Result;
@@ -19,10 +22,9 @@ import com.ssj.yunblog.common.enums.DeleteStatusEnum;
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 
 /**
@@ -39,6 +41,9 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeDao, Knowledge> i
 
     @Resource
     private KnowledgeInfoDao knowledgeInfoDao;
+
+    @Resource
+    private KnowledgeDetailDao knowledgeDetailDao;
 
 
     /**
@@ -84,5 +89,90 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeDao, Knowledge> i
         item.setDelStatus(DeleteStatusEnum.UN_DELETED.getCode());
         knowledgeInfoDao.insert(item);
         return Result.ok();
+    }
+
+    /**
+     * 新增文章内容
+     */
+    @Override
+    public Result<Boolean> addArticleDetail(KnowledgeDetailBo knowledgeDetailBo) {
+        KnowledgeDetail detail = new KnowledgeDetail();
+        BeanUtils.copyProperties(knowledgeDetailBo, detail);
+        detail.setDelStatus(DeleteStatusEnum.UN_DELETED.getCode());
+        knowledgeDetailDao.insert(detail);
+        return Result.ok(true);
+    }
+
+    /**
+     * 更新知识库
+     */
+    @Override
+    public Result<Boolean> updateKnowledge(KnowledgeBo knowledge) {
+        Knowledge item = new Knowledge();
+        BeanUtils.copyProperties(knowledge, item);
+        knowledgeDao.updateById(item);
+        return Result.ok(true);
+    }
+
+    /**
+     * 查询知识库下级信息列表
+     */
+    @Override
+    public Result<List<KnowledgeInfoVo>> queryLowList(String id) {
+        List<KnowledgeInfo> list = knowledgeInfoDao.selectList(new LambdaQueryWrapper<KnowledgeInfo>()
+                .eq(KnowledgeInfo::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode())
+                .eq(KnowledgeInfo::getParentId, id));
+        List<KnowledgeInfoVo> infoVos = list.stream().map((item) -> {
+            KnowledgeInfoVo infoVo = new KnowledgeInfoVo();
+            BeanUtils.copyProperties(item, infoVo);
+            return infoVo;
+        }).toList();
+        return Result.ok(infoVos);
+    }
+
+    /**
+     * 删除知识库
+     */
+    @Override
+    public Result<Boolean> deleteKnowledge(String id) {
+        Knowledge knowledge = new Knowledge();
+        knowledge.setId(id);
+        knowledge.setDelStatus(DeleteStatusEnum.DELETED.getCode());
+        knowledgeDao.updateById(knowledge);
+        return Result.ok(true);
+    }
+
+    /**
+     * 更新分组或文章
+     */
+    @Override
+    public Result<Boolean> updateGroupOrArticle(KnowledgeInfoBo knowledgeInfoBo) {
+        KnowledgeInfo item = new KnowledgeInfo();
+        BeanUtils.copyProperties(knowledgeInfoBo, item);
+        knowledgeInfoDao.updateById(item);
+        return Result.ok(true);
+    }
+
+    /**
+     * 删除分组或文章
+     */
+    @Override
+    public Result<Boolean> deleteGroupOrArticle(String id) {
+        KnowledgeInfo item = new KnowledgeInfo();
+        item.setId(id);
+        item.setDelStatus(DeleteStatusEnum.DELETED.getCode());
+        knowledgeInfoDao.updateById(item);
+        return Result.ok(true);
+    }
+
+    /**
+     * 更新文章内容
+     */
+    @Override
+    public Result<Boolean> updateArticleDetail(KnowledgeDetailBo knowledgeDetailBo) {
+        KnowledgeDetail detail = new KnowledgeDetail();
+        BeanUtils.copyProperties(knowledgeDetailBo, detail);
+        knowledgeDetailDao.updateById(detail);
+        return Result.ok(true);
     }
 }

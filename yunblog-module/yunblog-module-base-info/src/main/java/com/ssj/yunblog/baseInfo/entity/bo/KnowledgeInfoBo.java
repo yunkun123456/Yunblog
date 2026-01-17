@@ -1,6 +1,5 @@
 package com.ssj.yunblog.baseInfo.entity.bo;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 /**
@@ -9,7 +8,6 @@ import lombok.Data;
  * @author yunkun
  * @since 2026-01-03 20:18:34
  */
-@TableName("t_knowledge_info")
 @Data
 public class KnowledgeInfoBo {
     /**
@@ -40,26 +38,5 @@ public class KnowledgeInfoBo {
      * 是否公开，0私有，1公开
      */
     private String isPublic;
-    /**
-     * 删除标识，0未删除，1已删除
-     */
-    private String delStatus;
-    /**
-     * 创建人
-     */
-    private String createBy;
-    /**
-     * 创建时间
-     */
-    private String createTime;
-    /**
-     * 更新人
-     */
-    private String updateBy;
-    /**
-     * 更新时间
-     */
-    private String updateTime;
-
 }
 
