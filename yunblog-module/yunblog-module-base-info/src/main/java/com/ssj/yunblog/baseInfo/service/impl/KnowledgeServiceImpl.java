@@ -24,6 +24,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -174,5 +175,39 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeDao, Knowledge> i
         BeanUtils.copyProperties(knowledgeDetailBo, detail);
         knowledgeDetailDao.updateById(detail);
         return Result.ok(true);
+    }
+
+    /**
+     * 查询知识库树形列表
+     */
+    @Override
+    public Result<List<KnowledgeInfoVo>> queryTreeList(String id) {
+        List<KnowledgeInfo> list = knowledgeInfoDao.selectList(new LambdaQueryWrapper<KnowledgeInfo>()
+                .eq(KnowledgeInfo::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode())
+                .eq(KnowledgeInfo::getKnowledgeId, id));
+        List<KnowledgeInfo> firstList = list.stream().filter(item -> item.getParentId().equals(id)).toList();
+        List<KnowledgeInfoVo> infoVos = buildTree(firstList, list);
+        return Result.ok(infoVos);
+    }
+
+    public List<KnowledgeInfoVo> buildTree(List<KnowledgeInfo> parentList, List<KnowledgeInfo> totalList) {
+        if (parentList == null || parentList.isEmpty()) {
+            return new ArrayList<>();
+        }
+        List<KnowledgeInfoVo> result = new ArrayList<>();
+        for (KnowledgeInfo knowledgeInfo : parentList) {
+            String parentId = knowledgeInfo.getId();
+            List<KnowledgeInfo> children = totalList.stream().filter(item -> item.getParentId().equals(parentId)).toList();
+            KnowledgeInfoVo infoVo = new KnowledgeInfoVo();
+            BeanUtils.copyProperties(knowledgeInfo, infoVo);
+            if (infoVo.getType().equals("1")){
+                infoVo.setType("group");
+            }else {
+                infoVo.setType("doc");
+            }
+            infoVo.setChildren(buildTree(children, totalList));
+            result.add(infoVo);
+        }
+        return result;
     }
 }

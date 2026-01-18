@@ -51,6 +51,17 @@ public class KnowledgeController {
     }
 
     /**
+     * 查询知识库信息树形列表
+     */
+    @GetMapping("/tree/{id}")
+    public Result<List<KnowledgeInfoVo>> queryTreeList(@PathVariable String id) {
+        if (id == null || id.isEmpty()) {
+            return Result.fail("上级id不能为空");
+        }
+        return knowledgeService.queryTreeList(id);
+    }
+
+    /**
      * 新增知识库
      */
     @PostMapping

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 知识库信息实体类 - vo
@@ -43,26 +44,12 @@ public class KnowledgeInfoVo {
      * 是否公开，0私有，1公开
      */
     private String isPublic;
+
     /**
-     * 删除标识，0未删除，1已删除
+     * 下级列表
      */
-    private String delStatus;
-    /**
-     * 创建人
-     */
-    private String createBy;
-    /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
-    /**
-     * 更新人
-     */
-    private String updateBy;
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updateTime;
+    private List<KnowledgeInfoVo> children;
+
 
 }
 

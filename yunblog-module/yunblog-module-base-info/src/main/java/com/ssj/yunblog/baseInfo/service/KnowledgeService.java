@@ -70,4 +70,9 @@ public interface KnowledgeService extends IService<Knowledge> {
      * 更新文章内容
      */
     Result<Boolean> updateArticleDetail(KnowledgeDetailBo knowledgeDetailBo);
+
+    /**
+     * 查询知识库树形列表
+     */
+    Result<List<KnowledgeInfoVo>> queryTreeList(String id);
 }
