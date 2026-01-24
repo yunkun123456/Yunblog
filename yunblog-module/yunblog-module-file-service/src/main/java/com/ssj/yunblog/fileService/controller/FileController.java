@@ -25,7 +25,7 @@ public class FileController {
     /**
      * 文件上传服务接口
      */
-    @GetMapping("/upload")
+    @PostMapping("/upload")
     public Result<String> upload(@RequestParam("file") MultipartFile file) {
         if (file.isEmpty()) {
             return Result.fail("上传文件为空");
