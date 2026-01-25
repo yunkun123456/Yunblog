@@ -62,6 +62,17 @@ public class KnowledgeController {
     }
 
     /**
+     * 查询知识库信息树形列表 - 扩展包含文章内容
+     */
+    @GetMapping("/tree/paper/{id}")
+    public Result<List<KnowledgeInfoVo>> queryTreePaperList(@PathVariable String id) {
+        if (id == null || id.isEmpty()) {
+            return Result.fail("上级id不能为空");
+        }
+        return knowledgeService.queryTreePaperList(id);
+    }
+
+    /**
      * 新增知识库
      */
     @PostMapping
@@ -129,6 +140,17 @@ public class KnowledgeController {
     @PutMapping("/detail")
     public Result<Boolean> updateArticleDetail(@RequestBody @Validated(Update.class) KnowledgeDetailBo knowledgeDetailBo) {
         return knowledgeService.updateArticleDetail(knowledgeDetailBo);
+    }
+
+    /**
+     * 查询指定文章内容
+     */
+    @GetMapping("/paper/{id}")
+    public Result<String> queryPaperById(@PathVariable String id) {
+        if (id == null || id.isEmpty()) {
+            return Result.fail("文章id不能为空");
+        }
+        return knowledgeService.queryPaperById(id);
     }
 
 }

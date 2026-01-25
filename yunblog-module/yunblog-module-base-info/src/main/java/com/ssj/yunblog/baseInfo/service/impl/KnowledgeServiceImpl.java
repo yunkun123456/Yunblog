@@ -190,6 +190,41 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeDao, Knowledge> i
         return Result.ok(infoVos);
     }
 
+    /**
+     * 查询知识库信息树形列表 - 扩展包含文章内容
+     */
+    @Override
+    public Result<List<KnowledgeInfoVo>> queryTreePaperList(String id) {
+        List<KnowledgeInfo> list = knowledgeInfoDao.selectList(new LambdaQueryWrapper<KnowledgeInfo>()
+                .eq(KnowledgeInfo::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode())
+                .eq(KnowledgeInfo::getKnowledgeId, id));
+        List<KnowledgeInfo> firstList = list.stream().filter(item -> item.getParentId().equals(id)).toList();
+        List<KnowledgeInfoVo> infoVos = buildTree(firstList, list);
+        // 第一个文件夹，默认展示。且查询相应的文章
+        if (!infoVos.isEmpty()) {
+            firstItemBuild(infoVos.getFirst());
+        }
+        return Result.ok(infoVos);
+    }
+
+    /**
+     * 查询文章内容
+     */
+    @Override
+    public Result<String> queryPaperById(String id) {
+        LambdaQueryWrapper<KnowledgeDetail> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(KnowledgeDetail::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode())
+                .eq(KnowledgeDetail::getKnowledgeInfoId, id);
+        KnowledgeDetail detail = knowledgeDetailDao.selectOne(queryWrapper);
+        if (detail == null) {
+            return Result.fail("文章内容不存在");
+        }
+        return Result.ok(detail.getContent());
+    }
+
+    /**
+     * 构建树形结构
+     */
     public List<KnowledgeInfoVo> buildTree(List<KnowledgeInfo> parentList, List<KnowledgeInfo> totalList) {
         if (parentList == null || parentList.isEmpty()) {
             return new ArrayList<>();
@@ -200,14 +235,22 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeDao, Knowledge> i
             List<KnowledgeInfo> children = totalList.stream().filter(item -> item.getParentId().equals(parentId)).toList();
             KnowledgeInfoVo infoVo = new KnowledgeInfoVo();
             BeanUtils.copyProperties(knowledgeInfo, infoVo);
-            if (infoVo.getType().equals("1")){
+            if (infoVo.getType().equals("1")) {
                 infoVo.setType("group");
-            }else {
+            } else {
                 infoVo.setType("doc");
             }
             infoVo.setChildren(buildTree(children, totalList));
             result.add(infoVo);
         }
         return result;
+    }
+
+    /**
+     * 首个知识库item构建
+     */
+    public void firstItemBuild(KnowledgeInfoVo result) {
+        result.setIsOpen(true);
+        // todo 查询文章内容
     }
 }

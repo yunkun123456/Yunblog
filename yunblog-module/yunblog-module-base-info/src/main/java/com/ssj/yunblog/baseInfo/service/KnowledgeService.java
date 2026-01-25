@@ -75,4 +75,14 @@ public interface KnowledgeService extends IService<Knowledge> {
      * 查询知识库树形列表
      */
     Result<List<KnowledgeInfoVo>> queryTreeList(String id);
+
+    /**
+     * 查询知识库信息树形列表 - 扩展包含文章内容
+     */
+    Result<List<KnowledgeInfoVo>> queryTreePaperList(String id);
+
+    /**
+     * 根据id查询文章内容
+     */
+    Result<String> queryPaperById(String id);
 }

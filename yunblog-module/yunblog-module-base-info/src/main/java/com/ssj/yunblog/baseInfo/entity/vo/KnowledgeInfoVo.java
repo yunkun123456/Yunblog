@@ -44,7 +44,18 @@ public class KnowledgeInfoVo {
      * 是否公开，0私有，1公开
      */
     private String isPublic;
-
+    /**
+     * 是否打开，默认不打开文件夹
+     */
+    private Boolean isOpen = false;
+    /**
+     * 是否选中，默认不选中
+     */
+    private Boolean isActive = false;
+    /**
+     * 文章内容
+     */
+    private String content;
     /**
      * 下级列表
      */
