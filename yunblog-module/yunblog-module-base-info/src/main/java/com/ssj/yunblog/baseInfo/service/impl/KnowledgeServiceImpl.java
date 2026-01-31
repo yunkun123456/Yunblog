@@ -1,6 +1,7 @@
 package com.ssj.yunblog.baseInfo.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -97,6 +98,7 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeDao, Knowledge> i
      */
     @Override
     public Result<Boolean> addArticleDetail(KnowledgeDetailBo knowledgeDetailBo) {
+        // todo 二次插入自动更新
         KnowledgeDetail detail = new KnowledgeDetail();
         BeanUtils.copyProperties(knowledgeDetailBo, detail);
         detail.setDelStatus(DeleteStatusEnum.UN_DELETED.getCode());
@@ -171,9 +173,12 @@ public class KnowledgeServiceImpl extends ServiceImpl<KnowledgeDao, Knowledge> i
      */
     @Override
     public Result<Boolean> updateArticleDetail(KnowledgeDetailBo knowledgeDetailBo) {
-        KnowledgeDetail detail = new KnowledgeDetail();
-        BeanUtils.copyProperties(knowledgeDetailBo, detail);
-        knowledgeDetailDao.updateById(detail);
+        LambdaUpdateWrapper<KnowledgeDetail> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.eq(KnowledgeDetail::getKnowledgeInfoId, knowledgeDetailBo.getKnowledgeInfoId())
+                .eq(KnowledgeDetail::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode())
+                .set(KnowledgeDetail::getContent, knowledgeDetailBo.getContent())
+                .set(KnowledgeDetail::getPicUrl, knowledgeDetailBo.getPicUrl());
+        knowledgeDetailDao.update(updateWrapper);
         return Result.ok(true);
     }
 
