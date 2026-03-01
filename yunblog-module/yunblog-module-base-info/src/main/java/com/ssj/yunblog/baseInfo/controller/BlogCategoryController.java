@@ -1,8 +1,11 @@
 package com.ssj.yunblog.baseInfo.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ssj.yunblog.baseInfo.entity.bo.BlogCategoryBo;
 import com.ssj.yunblog.baseInfo.entity.bo.BlogCategoryQueryBo;
+import com.ssj.yunblog.baseInfo.entity.bo.BlogInfoQueryBo;
 import com.ssj.yunblog.baseInfo.entity.vo.BlogCategoryVo;
+import com.ssj.yunblog.baseInfo.entity.vo.BlogInfoVo;
 import com.ssj.yunblog.baseInfo.service.BlogCategoryService;
 import com.ssj.yunblog.common.api.Add;
 import com.ssj.yunblog.common.entity.Result;
@@ -24,6 +27,14 @@ public class BlogCategoryController {
 
     @Resource
     private BlogCategoryService blogCategoryService;
+
+    /**
+     * 分页查询分类信息
+     */
+    @GetMapping("/page")
+    public Result<IPage<BlogCategoryVo>> queryPageList(BlogCategoryQueryBo param) {
+        return blogCategoryService.queryPageList(param);
+    }
 
     /**
      * 获取所有分类信息

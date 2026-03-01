@@ -12,6 +12,11 @@ import lombok.Data;
 public class BlogCategoryQueryBo {
 
     /**
+     * 关键词
+     */
+    private String keyword;
+
+    /**
      * 级别
      */
     private Integer level;
@@ -20,4 +25,24 @@ public class BlogCategoryQueryBo {
      * 父级id
      */
     private String parentId;
+
+    /**
+     * 页码
+     */
+    private Integer pageNum;
+
+    /**
+     * 页大小
+     */
+    private Integer pageSize;
+
+    /**
+     * 开始时间
+     */
+    private String startTime;
+
+    /**
+     * 结束时间
+     */
+    private String endTime;
 }

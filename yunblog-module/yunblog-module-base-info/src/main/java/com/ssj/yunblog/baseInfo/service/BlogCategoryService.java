@@ -1,5 +1,6 @@
 package com.ssj.yunblog.baseInfo.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ssj.yunblog.baseInfo.entity.BlogCategory;
 import com.ssj.yunblog.baseInfo.entity.bo.BlogCategoryBo;
@@ -36,4 +37,9 @@ public interface BlogCategoryService extends IService<BlogCategory> {
      * 条件查询分类信息
      */
     Result<List<BlogCategoryVo>> queryCategoryList(BlogCategoryQueryBo param);
+
+    /**
+     * 分页查询分类信息
+     */
+    Result<IPage<BlogCategoryVo>> queryPageList(BlogCategoryQueryBo param);
 }

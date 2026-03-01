@@ -1,12 +1,17 @@
 package com.ssj.yunblog.baseInfo.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ssj.yunblog.baseInfo.entity.BlogCategory;
 import com.ssj.yunblog.baseInfo.dao.BlogCategoryDao;
+import com.ssj.yunblog.baseInfo.entity.BlogInfo;
 import com.ssj.yunblog.baseInfo.entity.bo.BlogCategoryBo;
 import com.ssj.yunblog.baseInfo.entity.bo.BlogCategoryQueryBo;
 import com.ssj.yunblog.baseInfo.entity.vo.BlogCategoryVo;
+import com.ssj.yunblog.baseInfo.entity.vo.BlogInfoVo;
 import com.ssj.yunblog.baseInfo.service.BlogCategoryService;
 import com.ssj.yunblog.common.entity.Result;
 import com.ssj.yunblog.common.enums.DeleteStatusEnum;
@@ -104,6 +109,29 @@ public class BlogCategoryServiceImpl extends ServiceImpl<BlogCategoryDao, BlogCa
             BeanUtils.copyProperties(category, vo);
             result.add(vo);
         }
+        return Result.ok(result);
+    }
+
+    /**
+     * 分页查询分类信息
+     */
+    @Override
+    public Result<IPage<BlogCategoryVo>> queryPageList(BlogCategoryQueryBo param) {
+        LambdaQueryWrapper<BlogCategory> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(BlogCategory::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode())
+                .like(param.getKeyword() != null && !param.getKeyword().isEmpty(), BlogCategory::getCategoryName, param.getKeyword())
+                .between(!StringUtils.isEmpty(param.getStartTime()) && !StringUtils.isEmpty(param.getEndTime()),
+                        BlogCategory::getCreateTime, param.getStartTime(), param.getEndTime());
+        Page<BlogCategory> page = new Page<>(param.getPageNum(), param.getPageSize());
+        IPage<BlogCategory> categoryPage = blogCategoryDao.selectPage(page, queryWrapper);
+        Page<BlogCategoryVo> result = new Page<>();
+        List<BlogCategoryVo> list = categoryPage.getRecords().stream().map((item) -> {
+            BlogCategoryVo vo = new BlogCategoryVo();
+            BeanUtils.copyProperties(item, vo);
+            return vo;
+        }).toList();
+        result.setRecords(list);
+        result.setTotal(categoryPage.getTotal());
         return Result.ok(result);
     }
 
