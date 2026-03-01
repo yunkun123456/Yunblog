@@ -1,8 +1,10 @@
 package com.ssj.yunblog.baseInfo.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ssj.yunblog.baseInfo.entity.BlogLabel;
 import com.ssj.yunblog.baseInfo.entity.bo.BlogLabelBo;
+import com.ssj.yunblog.baseInfo.entity.bo.BlogLabelQueryBo;
 import com.ssj.yunblog.baseInfo.entity.vo.BlogLabelVo;
 import com.ssj.yunblog.common.entity.Result;
 
@@ -35,4 +37,9 @@ public interface BlogLabelService extends IService<BlogLabel> {
      * 分类id查询标签信息
      */
     Result<List<BlogLabelVo>> queryLabelListByCategoryId(String categoryId);
+
+    /**
+     * 分页查询标签信息
+     */
+    Result<IPage<BlogLabelVo>> queryPageList(BlogLabelQueryBo param);
 }
