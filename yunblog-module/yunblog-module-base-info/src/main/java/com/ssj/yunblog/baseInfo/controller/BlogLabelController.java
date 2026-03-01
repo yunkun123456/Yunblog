@@ -1,8 +1,8 @@
 package com.ssj.yunblog.baseInfo.controller;
 
-import com.ssj.yunblog.baseInfo.entity.bo.BlogCategoryQueryBo;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ssj.yunblog.baseInfo.entity.bo.BlogLabelBo;
-import com.ssj.yunblog.baseInfo.entity.vo.BlogCategoryVo;
+import com.ssj.yunblog.baseInfo.entity.bo.BlogLabelQueryBo;
 import com.ssj.yunblog.baseInfo.entity.vo.BlogLabelVo;
 import com.ssj.yunblog.baseInfo.service.BlogLabelService;
 import com.ssj.yunblog.common.api.Add;
@@ -26,6 +26,14 @@ public class BlogLabelController {
 
     @Resource
     private BlogLabelService blogLabelService;
+
+    /**
+     * 分页查询标签信息
+     */
+    @GetMapping("/page")
+    public Result<IPage<BlogLabelVo>> queryPageList(BlogLabelQueryBo param) {
+        return blogLabelService.queryPageList(param);
+    }
 
     /**
      * 新增博客标签信息
