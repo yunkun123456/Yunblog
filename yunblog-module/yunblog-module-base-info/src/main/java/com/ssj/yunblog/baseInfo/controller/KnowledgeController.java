@@ -8,6 +8,7 @@ import com.ssj.yunblog.baseInfo.entity.bo.KnowledgeQueryBo;
 import com.ssj.yunblog.baseInfo.entity.vo.KnowledgeInfoVo;
 import com.ssj.yunblog.baseInfo.entity.vo.KnowledgeVo;
 import com.ssj.yunblog.baseInfo.service.KnowledgeService;
+import com.ssj.yunblog.common.access.CheckRole;
 import com.ssj.yunblog.common.api.Add;
 import com.ssj.yunblog.common.api.Update;
 import com.ssj.yunblog.common.entity.Result;
@@ -42,6 +43,7 @@ public class KnowledgeController {
     /**
      * 查询知识库下级信息列表
      */
+    @CheckRole(value = {"admin", "COMMON_USER"})
     @GetMapping("/list/{id}")
     public Result<List<KnowledgeInfoVo>> queryLowList(@PathVariable String id) {
         if (id == null || id.isEmpty()) {
@@ -53,6 +55,7 @@ public class KnowledgeController {
     /**
      * 查询知识库信息树形列表
      */
+    @CheckRole(value = {"admin", "COMMON_USER"})
     @GetMapping("/tree/{id}")
     public Result<List<KnowledgeInfoVo>> queryTreeList(@PathVariable String id) {
         if (id == null || id.isEmpty()) {
@@ -64,6 +67,7 @@ public class KnowledgeController {
     /**
      * 查询知识库信息树形列表 - 扩展包含文章内容
      */
+    @CheckRole(value = {"admin", "COMMON_USER"})
     @GetMapping("/tree/paper/{id}")
     public Result<List<KnowledgeInfoVo>> queryTreePaperList(@PathVariable String id) {
         if (id == null || id.isEmpty()) {
@@ -75,6 +79,7 @@ public class KnowledgeController {
     /**
      * 新增知识库
      */
+    @CheckRole(value = {"admin"})
     @PostMapping
     public Result<Boolean> add(@RequestBody @Validated(Add.class) KnowledgeBo knowledge) {
         return knowledgeService.add(knowledge);
@@ -83,6 +88,7 @@ public class KnowledgeController {
     /**
      * 更新知识库
      */
+    @CheckRole(value = {"admin"})
     @PutMapping
     public Result<Boolean> updateKnowledge(@RequestBody @Validated(Update.class) KnowledgeBo knowledge) {
         return knowledgeService.updateKnowledge(knowledge);
@@ -91,6 +97,7 @@ public class KnowledgeController {
     /**
      * 删除知识库
      */
+    @CheckRole(value = {"admin"})
     @DeleteMapping("/{id}")
     public Result<Boolean> deleteKnowledge(@PathVariable String id) {
         if (id == null || id.isEmpty()) {
@@ -102,6 +109,7 @@ public class KnowledgeController {
     /**
      * 新增分组或文章
      */
+    @CheckRole(value = {"admin"})
     @PostMapping("/info")
     public Result<Boolean> addGroupOrArticle(@RequestBody @Validated(Add.class) KnowledgeInfoBo knowledgeInfoBo) {
         return knowledgeService.addGroupOrArticle(knowledgeInfoBo);
@@ -110,6 +118,7 @@ public class KnowledgeController {
     /**
      * 更新分组或文章
      */
+    @CheckRole(value = {"admin"})
     @PutMapping("/info")
     public Result<Boolean> updateGroupOrArticle(@RequestBody @Validated(Update.class) KnowledgeInfoBo knowledgeInfoBo) {
         return knowledgeService.updateGroupOrArticle(knowledgeInfoBo);
@@ -118,6 +127,7 @@ public class KnowledgeController {
     /**
      * 删除分组或文章
      */
+    @CheckRole(value = {"admin"})
     @DeleteMapping("/info/{id}")
     public Result<Boolean> deleteGroupOrArticle(@PathVariable String id) {
         if (id == null || id.isEmpty()) {
@@ -129,6 +139,7 @@ public class KnowledgeController {
     /**
      * 新增文章内容
      */
+    @CheckRole(value = {"admin"})
     @PostMapping("/detail")
     public Result<Boolean> addArticleDetail(@RequestBody @Validated(Add.class) KnowledgeDetailBo knowledgeDetailBo) {
         return knowledgeService.addArticleDetail(knowledgeDetailBo);
@@ -137,6 +148,7 @@ public class KnowledgeController {
     /**
      * 更新文章内容
      */
+    @CheckRole(value = {"admin"})
     @PutMapping("/detail")
     public Result<Boolean> updateArticleDetail(@RequestBody @Validated(Update.class) KnowledgeDetailBo knowledgeDetailBo) {
         return knowledgeService.updateArticleDetail(knowledgeDetailBo);
@@ -144,7 +156,9 @@ public class KnowledgeController {
 
     /**
      * 查询指定文章内容
+     * todo 后续扩展vip可以对具体文章内容做权限控制
      */
+    @CheckRole(value = {"admin", "COMMON_USER"})
     @GetMapping("/paper/{id}")
     public Result<String> queryPaperById(@PathVariable String id) {
         if (id == null || id.isEmpty()) {

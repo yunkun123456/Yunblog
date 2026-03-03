@@ -7,6 +7,7 @@ import com.ssj.yunblog.baseInfo.entity.bo.BlogInfoQueryBo;
 import com.ssj.yunblog.baseInfo.entity.vo.BlogCategoryVo;
 import com.ssj.yunblog.baseInfo.entity.vo.BlogInfoVo;
 import com.ssj.yunblog.baseInfo.service.BlogCategoryService;
+import com.ssj.yunblog.common.access.CheckRole;
 import com.ssj.yunblog.common.api.Add;
 import com.ssj.yunblog.common.entity.Result;
 import jakarta.annotation.Resource;
@@ -55,6 +56,7 @@ public class BlogCategoryController {
     /**
      * 新增分类信息
      */
+    @CheckRole(value = {"admin"})
     @PostMapping
     public Result<Boolean> add(@RequestBody @Validated(Add.class) BlogCategoryBo blogCategory) {
         return blogCategoryService.add(blogCategory);
@@ -63,6 +65,7 @@ public class BlogCategoryController {
     /**
      * 删除分类信息
      */
+    @CheckRole(value = {"admin"})
     @DeleteMapping("/{id}")
     public Result<Boolean> delete(@PathVariable("id") String id) {
         if (id.isEmpty()) {
