@@ -5,6 +5,7 @@ import com.ssj.yunblog.baseInfo.entity.bo.BlogLabelBo;
 import com.ssj.yunblog.baseInfo.entity.bo.BlogLabelQueryBo;
 import com.ssj.yunblog.baseInfo.entity.vo.BlogLabelVo;
 import com.ssj.yunblog.baseInfo.service.BlogLabelService;
+import com.ssj.yunblog.common.access.CheckRole;
 import com.ssj.yunblog.common.api.Add;
 import com.ssj.yunblog.common.entity.Result;
 import jakarta.annotation.Resource;
@@ -38,6 +39,7 @@ public class BlogLabelController {
     /**
      * 新增博客标签信息
      */
+    @CheckRole(value = {"admin"})
     @PostMapping
     public Result<Boolean> add(@RequestBody @Validated(Add.class) BlogLabelBo blogLabel) {
         return blogLabelService.add(blogLabel);
@@ -46,6 +48,7 @@ public class BlogLabelController {
     /**
      * 删除博客标签信息
      */
+    @CheckRole(value = {"admin"})
     @DeleteMapping("/{id}")
     public Result<Boolean> delete(@PathVariable("id") String id) {
         return blogLabelService.delete(id);

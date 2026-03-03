@@ -109,7 +109,8 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
         // 存储用户名称
         StpUtil.getSession().set("username", list.getFirst().getNickName());
         // 存在将用户角色和权限保存到Redis中
-        redisTemplate.opsForValue().set(RedisKey.ROLE_KEY + StpUtil.getLoginId(), list.getFirst().getRoleCode());
+        String[] roles = list.getFirst().getRoleCode().split(",");
+        redisTemplate.opsForValue().set(RedisKey.ROLE_KEY + StpUtil.getLoginId(), roles);
         // 权限信息保存
         Role role = roleService.queryByCode(list.getFirst().getRoleCode());
         List<Permission> permissions = permissionService.queryPermissionsByRoleId(role.getId());

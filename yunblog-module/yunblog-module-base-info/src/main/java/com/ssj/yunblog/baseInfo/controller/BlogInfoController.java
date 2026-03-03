@@ -6,14 +6,13 @@ import com.ssj.yunblog.baseInfo.entity.bo.BlogInfoQueryBo;
 import com.ssj.yunblog.baseInfo.entity.vo.BlogInfoDetailVo;
 import com.ssj.yunblog.baseInfo.entity.vo.BlogInfoVo;
 import com.ssj.yunblog.baseInfo.service.BlogInfoService;
+import com.ssj.yunblog.common.access.CheckRole;
 import com.ssj.yunblog.common.api.Add;
 import com.ssj.yunblog.common.api.Update;
 import com.ssj.yunblog.common.entity.Result;
 import jakarta.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 /**
@@ -34,6 +33,7 @@ public class BlogInfoController {
      * 新增博客
      */
     @PostMapping
+    @CheckRole(value = {"admin"})
     public Result<Boolean> add(@RequestBody @Validated(Add.class) BlogInfoBo blogInfo) {
         return blogInfoService.add(blogInfo);
     }
@@ -42,6 +42,7 @@ public class BlogInfoController {
      * 编辑博客
      */
     @PutMapping
+    @CheckRole(value = {"admin"})
     public Result<Boolean> edit(@RequestBody @Validated(Update.class) BlogInfoBo blogInfo) {
         return blogInfoService.edit(blogInfo);
     }
@@ -49,6 +50,7 @@ public class BlogInfoController {
     /**
      * 发布/取消发布博客
      */
+    @CheckRole(value = {"admin"})
     @PutMapping("/publish/{id}")
     public Result<Boolean> publish(@PathVariable("id") String id) {
         if (id.isEmpty()) {
@@ -95,6 +97,7 @@ public class BlogInfoController {
     /**
      * 点赞
      */
+    @CheckRole(value = {"admin", "COMMON_USER"})
     @GetMapping("/like")
     public Result<Boolean> giveALike(String blogId, Integer status) {
         if (blogId == null || blogId.isEmpty() || status == null) {
