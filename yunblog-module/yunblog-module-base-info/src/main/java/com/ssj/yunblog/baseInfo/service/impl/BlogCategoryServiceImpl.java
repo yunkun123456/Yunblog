@@ -162,6 +162,9 @@ public class BlogCategoryServiceImpl extends ServiceImpl<BlogCategoryDao, BlogCa
     public Result<Boolean> update(BlogCategoryBo blogCategory) {
         BlogCategory category = new BlogCategory();
         BeanUtils.copyProperties(blogCategory, category);
+        if (category.getCategoryLevel() == 1){
+            category.setParentId("0");
+        }
         if (blogCategoryDao.updateById(category) > 0) {
             return Result.ok();
         }
