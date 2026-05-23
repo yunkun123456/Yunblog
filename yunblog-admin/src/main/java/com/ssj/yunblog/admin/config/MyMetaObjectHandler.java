@@ -55,14 +55,19 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
      */
     private String getCurrentLoginId() {
         try {
-            Object loginId = StpUtil.getLoginId();
-            if(loginId != null){
-                return loginId.toString();
+            if (StpUtil.isLogin()){
+                return StpUtil.getLoginId().toString();
+            }else {
+                return "1959249411166965761"; // 默认值
             }
+//            Object loginId = StpUtil.getLoginId();
+//            if(loginId != null){
+//                return loginId.toString();
+//            }
         }catch (SaTokenContextException se){
             // TODO 目前没想到其他好方法
             return "1959249411166965761"; // 默认值
         }
-        return "1959249411166965761"; // 默认值
+//        return "1959249411166965761"; // 默认值
     }
 }
