@@ -15,6 +15,11 @@ import lombok.Data;
 @Data
 public class BlogLabelBo {
     /**
+     * 主键id
+     */
+    @NotBlank(message = "id不能为空！", groups = {Update.class})
+    private String id;
+    /**
      * 标签名称
      */
     @NotBlank(message = "博客标签名称不能为空！", groups = {Add.class, Update.class})
