@@ -18,5 +18,10 @@ public class BlogLabelVo {
      * 标签名称
      */
     private String labelName;
+
+    /**
+     * 创建时间
+     */
+    private String createTime;
 }
 

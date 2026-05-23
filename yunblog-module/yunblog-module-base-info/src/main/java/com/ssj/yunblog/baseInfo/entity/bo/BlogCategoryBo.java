@@ -16,6 +16,11 @@ import lombok.Data;
 @Data
 public class BlogCategoryBo {
     /**
+     * 主键id
+     */
+    @NotBlank(message = "id不能为空！", groups = {Update.class})
+    private String id;
+    /**
      * 分类名称
      */
     @NotBlank(message = "分类名称不能为空！", groups = {Add.class, Update.class})

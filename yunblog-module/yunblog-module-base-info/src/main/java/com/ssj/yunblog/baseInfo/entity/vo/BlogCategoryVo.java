@@ -33,6 +33,10 @@ public class BlogCategoryVo {
      */
     private String parentId;
     /**
+     * 父级分类名称
+     */
+    private String parentName;
+    /**
      * 删除标识，0未删除，1已删除
      */
     private String delStatus;

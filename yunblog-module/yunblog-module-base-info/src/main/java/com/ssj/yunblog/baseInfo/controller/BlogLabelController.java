@@ -7,6 +7,7 @@ import com.ssj.yunblog.baseInfo.entity.vo.BlogLabelVo;
 import com.ssj.yunblog.baseInfo.service.BlogLabelService;
 import com.ssj.yunblog.common.access.CheckRole;
 import com.ssj.yunblog.common.api.Add;
+import com.ssj.yunblog.common.api.Update;
 import com.ssj.yunblog.common.entity.Result;
 import jakarta.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
@@ -68,6 +69,15 @@ public class BlogLabelController {
     @GetMapping("/list/{categoryId}")
     public Result<List<BlogLabelVo>> queryLabelListByCategoryId(@PathVariable String categoryId) {
         return blogLabelService.queryLabelListByCategoryId(categoryId);
+    }
+
+    /**
+     * 更新标签信息
+     */
+    @CheckRole(value = {"admin"})
+    @PutMapping
+    public Result<Boolean> update(@RequestBody @Validated(Update.class) BlogLabelBo blogLabel) {
+        return blogLabelService.update(blogLabel);
     }
 
 }

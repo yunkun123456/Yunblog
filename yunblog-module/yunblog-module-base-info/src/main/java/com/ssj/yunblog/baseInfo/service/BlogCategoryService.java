@@ -29,6 +29,11 @@ public interface BlogCategoryService extends IService<BlogCategory> {
     Result<Boolean> delete(String id);
 
     /**
+     * 更新分类信息
+     */
+    Result<Boolean> update(BlogCategoryBo blogCategory);
+
+    /**
      * 查询所有分类信息
      */
     Result<List<BlogCategoryVo>> queryAllCategory();

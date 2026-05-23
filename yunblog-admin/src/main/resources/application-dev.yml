@@ -16,15 +16,16 @@ sa-token:
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://14.103.150.52:3306/yunblog_local?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&zeroDateTimeBehavior=convertToNull
+    url: jdbc:mysql://localhost:3306/yunblog_local?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&zeroDateTimeBehavior=convertToNull
     username: root
-    password: Ssj200115
+    password: 1234
 
   data:
     redis:
-      host: 14.103.150.52
+      host: localhost
       port: 6379
-      password: ssj200115
+      # 本地redis缓存，占用10库
+      database: 10
 
 logging:
   level:

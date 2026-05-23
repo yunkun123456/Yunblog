@@ -9,6 +9,7 @@ import com.ssj.yunblog.baseInfo.entity.vo.BlogInfoVo;
 import com.ssj.yunblog.baseInfo.service.BlogCategoryService;
 import com.ssj.yunblog.common.access.CheckRole;
 import com.ssj.yunblog.common.api.Add;
+import com.ssj.yunblog.common.api.Update;
 import com.ssj.yunblog.common.entity.Result;
 import jakarta.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
@@ -72,6 +73,15 @@ public class BlogCategoryController {
             return Result.fail("分类id不能为空！");
         }
         return blogCategoryService.delete(id);
+    }
+
+    /**
+     * 更新分类信息
+     */
+    @CheckRole(value = {"admin"})
+    @PutMapping
+    public Result<Boolean> update(@RequestBody @Validated(Update.class) BlogCategoryBo blogCategory) {
+        return blogCategoryService.update(blogCategory);
     }
 
 }

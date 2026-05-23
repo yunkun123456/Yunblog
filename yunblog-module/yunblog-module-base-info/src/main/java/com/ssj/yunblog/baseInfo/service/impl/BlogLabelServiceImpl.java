@@ -121,10 +121,24 @@ public class BlogLabelServiceImpl extends ServiceImpl<BlogLabelDao, BlogLabel> i
         List<BlogLabelVo> list = labelPage.getRecords().stream().map((item) -> {
             BlogLabelVo vo = new BlogLabelVo();
             BeanUtils.copyProperties(item, vo);
+            vo.setCreateTime(item.getCreateTime().toString());
             return vo;
         }).toList();
         result.setRecords(list);
         result.setTotal(labelPage.getTotal());
         return Result.ok(result);
+    }
+
+    /**
+     * 更新标签信息
+     */
+    @Override
+    public Result<Boolean> update(BlogLabelBo blogLabel) {
+        BlogLabel label = new BlogLabel();
+        BeanUtils.copyProperties(blogLabel, label);
+        if (blogLabelDao.updateById(label) > 0) {
+            return Result.ok();
+        }
+        return Result.fail("更新标签信息失败");
     }
 }

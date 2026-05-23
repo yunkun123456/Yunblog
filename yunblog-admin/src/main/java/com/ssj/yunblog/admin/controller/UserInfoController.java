@@ -1,12 +1,15 @@
 package com.ssj.yunblog.admin.controller;
 
+import cn.dev33.satoken.annotation.SaCheckLogin;
 import com.ssj.yunblog.admin.entity.bo.UserInfoBo;
 import com.ssj.yunblog.admin.entity.vo.UserInfoVo;
 import com.ssj.yunblog.admin.service.UserInfoService;
 import com.ssj.yunblog.common.api.Add;
+import com.ssj.yunblog.common.constant.ResultCode;
 import com.ssj.yunblog.common.api.Update;
 import com.ssj.yunblog.common.entity.Result;
 import jakarta.annotation.Resource;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,9 +56,16 @@ public class UserInfoController {
     /**
      * 获取用户信息
      */
+    @SaCheckLogin
     @GetMapping("/details")
-    public Result<UserInfoVo> getUserInfoDetail() {
-        return userInfoService.getUserInfoDetail();
+    public Result<UserInfoVo> getUserInfoDetail(HttpServletResponse response) {
+        Result<UserInfoVo> result = userInfoService.getUserInfoDetail();
+        if (ResultCode.UNAUTHORIZED.equals(result.getCode())) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        } else if (ResultCode.FORBIDDEN.equals(result.getCode())) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        }
+        return result;
     }
 
 
