@@ -15,6 +15,7 @@ import com.ssj.yunblog.admin.service.PermissionService;
 import com.ssj.yunblog.admin.service.RoleService;
 import com.ssj.yunblog.admin.service.UserInfoService;
 import com.ssj.yunblog.common.constant.RedisKey;
+import com.ssj.yunblog.common.constant.ResultCode;
 import com.ssj.yunblog.common.entity.Result;
 import com.ssj.yunblog.common.enums.DeleteStatusEnum;
 import jakarta.annotation.Resource;
@@ -125,7 +126,10 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
      */
     @Override
     public Result<UserInfoVo> getUserInfoDetail() {
-        String loginId = (String) StpUtil.getLoginId();
+        String loginId = (String) StpUtil.getLoginIdDefaultNull();
+        if (loginId == null) {
+            return Result.fail("请先登录!", ResultCode.UNAUTHORIZED);
+        }
         UserInfo userInfo = userInfoDao.selectById(loginId);
         UserInfoVo userInfoVo = new UserInfoVo();
         BeanUtils.copyProperties(userInfo, userInfoVo);

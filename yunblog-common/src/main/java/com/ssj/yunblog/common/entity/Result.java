@@ -66,4 +66,16 @@ public class Result<T> {
         result.setSuccess(false);
         return result;
     }
+
+    /**
+     * 请求失败 - 指定状态码
+     */
+    public static <T> Result<T> fail(String message, Integer code) {
+        Result<T> result = new Result<>();
+        result.setCode(code);
+        result.setMessage(message);
+        result.setData(null);
+        result.setSuccess(false);
+        return result;
+    }
 }
