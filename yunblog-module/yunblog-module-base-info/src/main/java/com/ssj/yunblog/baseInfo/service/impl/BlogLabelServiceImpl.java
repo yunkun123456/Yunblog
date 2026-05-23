@@ -121,6 +121,7 @@ public class BlogLabelServiceImpl extends ServiceImpl<BlogLabelDao, BlogLabel> i
         List<BlogLabelVo> list = labelPage.getRecords().stream().map((item) -> {
             BlogLabelVo vo = new BlogLabelVo();
             BeanUtils.copyProperties(item, vo);
+            vo.setCreateTime(item.getCreateTime().toString());
             return vo;
         }).toList();
         result.setRecords(list);

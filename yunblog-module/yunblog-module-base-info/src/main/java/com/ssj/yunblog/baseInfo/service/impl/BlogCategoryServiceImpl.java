@@ -121,13 +121,15 @@ public class BlogCategoryServiceImpl extends ServiceImpl<BlogCategoryDao, BlogCa
         queryWrapper.eq(BlogCategory::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode())
                 .like(param.getKeyword() != null && !param.getKeyword().isEmpty(), BlogCategory::getCategoryName, param.getKeyword())
                 .between(!StringUtils.isEmpty(param.getStartTime()) && !StringUtils.isEmpty(param.getEndTime()),
-                        BlogCategory::getCreateTime, param.getStartTime(), param.getEndTime());
+                        BlogCategory::getCreateTime, param.getStartTime(), param.getEndTime())
+                .eq(param.getLevel() != null,BlogCategory::getCategoryLevel,param.getLevel());
         Page<BlogCategory> page = new Page<>(param.getPageNum(), param.getPageSize());
         IPage<BlogCategory> categoryPage = blogCategoryDao.selectPage(page, queryWrapper);
         Page<BlogCategoryVo> result = new Page<>();
         List<BlogCategoryVo> list = categoryPage.getRecords().stream().map((item) -> {
             BlogCategoryVo vo = new BlogCategoryVo();
             BeanUtils.copyProperties(item, vo);
+            vo.setCreateTime(item.getCreateTime().toString());
             return vo;
         }).toList();
         result.setRecords(list);
