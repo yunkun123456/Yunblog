@@ -29,6 +29,11 @@ public interface BlogLabelService extends IService<BlogLabel> {
     Result<Boolean> delete(String id);
 
     /**
+     * 更新标签信息
+     */
+    Result<Boolean> update(BlogLabelBo blogLabel);
+
+    /**
      * 查询所有标签信息
      */
     Result<List<BlogLabelVo>> queryAllLabels();
