@@ -10,9 +10,12 @@ import com.ssj.yunblog.baseInfo.dao.BlogMessageDao;
 import com.ssj.yunblog.baseInfo.dao.BlogMessageDetailDao;
 import com.ssj.yunblog.baseInfo.entity.BlogMessage;
 import com.ssj.yunblog.baseInfo.entity.BlogMessageDetail;
+import com.ssj.yunblog.baseInfo.entity.bo.BlogCommentQueryBo;
 import com.ssj.yunblog.baseInfo.entity.bo.BlogMessageBo;
 import com.ssj.yunblog.baseInfo.entity.bo.BlogMessageQueryBo;
+import com.ssj.yunblog.baseInfo.entity.vo.BlogCommentVo;
 import com.ssj.yunblog.baseInfo.entity.vo.BlogMessageVo;
+import com.ssj.yunblog.baseInfo.service.BlogCommentService;
 import com.ssj.yunblog.baseInfo.service.BlogMessageService;
 import com.ssj.yunblog.common.constant.RedisKey;
 import com.ssj.yunblog.common.constant.ResultCode;
@@ -25,8 +28,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -47,6 +48,9 @@ public class BlogMessageServiceImpl extends ServiceImpl<BlogMessageDao, BlogMess
 
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
+
+    @Resource
+    private BlogCommentService blogCommentService;
 
     /**
      * 发布留言
@@ -71,7 +75,8 @@ public class BlogMessageServiceImpl extends ServiceImpl<BlogMessageDao, BlogMess
         }
 
         message.setTitle(blogMessage.getTitle());
-        message.setDiscussionName("");
+        // todo 依赖用户输入讨论以及我们这边利用大模型在一段时间内进行总结
+        message.setDiscussionName(blogMessage.getDiscussionName());
         message.setLikeCount(0);
         message.setCommentCount(0);
         message.setFavoriteCount(0);
@@ -95,6 +100,10 @@ public class BlogMessageServiceImpl extends ServiceImpl<BlogMessageDao, BlogMess
         return Result.ok(true, "留言发布成功，等待审核");
     }
 
+    /**
+     * 点赞功能
+     * todo:标识用户点赞
+     */
     @Override
     public Result<Boolean> like(String id) {
         if (id == null || id.isEmpty()) {
@@ -113,6 +122,9 @@ public class BlogMessageServiceImpl extends ServiceImpl<BlogMessageDao, BlogMess
         return Result.fail("点赞失败");
     }
 
+    /**
+     * 审核留言
+     */
     @Override
     public Result<Boolean> audit(String id, Integer status) {
         if (id == null || id.isEmpty()) {
@@ -135,6 +147,9 @@ public class BlogMessageServiceImpl extends ServiceImpl<BlogMessageDao, BlogMess
         return Result.fail("审核失败");
     }
 
+    /**
+     * 删除留言
+     */
     @Override
     public Result<Boolean> delete(String id) {
         if (id == null || id.isEmpty()) {
@@ -150,6 +165,9 @@ public class BlogMessageServiceImpl extends ServiceImpl<BlogMessageDao, BlogMess
         return Result.fail("删除失败");
     }
 
+    /**
+     * 分页查询留言信息 - frontend
+     */
     @Override
     public Result<IPage<BlogMessageVo>> queryPageList(BlogMessageQueryBo param) {
         LambdaQueryWrapper<BlogMessage> queryWrapper = new LambdaQueryWrapper<>();
@@ -185,6 +203,9 @@ public class BlogMessageServiceImpl extends ServiceImpl<BlogMessageDao, BlogMess
         return Result.ok(result);
     }
 
+    /**
+     * 分页查询 - 管理端
+     */
     @Override
     public Result<IPage<BlogMessageVo>> queryPageListAdmin(BlogMessageQueryBo param) {
         LambdaQueryWrapper<BlogMessage> queryWrapper = new LambdaQueryWrapper<>();
@@ -207,5 +228,63 @@ public class BlogMessageServiceImpl extends ServiceImpl<BlogMessageDao, BlogMess
         result.setRecords(list);
         result.setTotal(messagePage.getTotal());
         return Result.ok(result);
+    }
+
+    /**
+     * 获取留言详情
+     */
+    @Override
+    public Result<BlogMessageVo> getDetail(String id) {
+        if (id == null || id.isEmpty()) {
+            return Result.fail("留言ID不能为空");
+        }
+
+        BlogMessage message = blogMessageDao.selectById(id);
+        if (message == null) {
+            return Result.fail("留言不存在");
+        }
+
+        BlogMessageVo vo = new BlogMessageVo();
+        BeanUtils.copyProperties(message, vo);
+        vo.setCreateTime(message.getCreateTime().toString());
+
+        LambdaQueryWrapper<BlogMessageDetail> detailWrapper = new LambdaQueryWrapper<>();
+        detailWrapper.eq(BlogMessageDetail::getMessageId, id)
+                .eq(BlogMessageDetail::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode());
+        BlogMessageDetail detail = blogMessageDetailDao.selectOne(detailWrapper);
+        if (detail != null) {
+            vo.setContent(detail.getContent());
+        }
+
+        return Result.ok(vo);
+    }
+
+    /**
+     * 获取留言评论
+     */
+    @Override
+    public Result<IPage<BlogCommentVo>> getComments(String id, Integer current, Integer size) {
+        if (id == null || id.isEmpty()) {
+            return Result.fail("留言ID不能为空");
+        }
+        if (current == null || current < 1) {
+            current = 1;
+        }
+        if (size == null || size < 1) {
+            size = 10;
+        }
+
+        BlogMessage message = blogMessageDao.selectById(id);
+        if (message == null) {
+            return Result.fail("留言不存在");
+        }
+
+        BlogCommentQueryBo param = new BlogCommentQueryBo();
+        param.setType("message");
+        param.setParentId(id);
+        param.setCurrent(current);
+        param.setSize(size);
+
+        return blogCommentService.queryPageList(param);
     }
 }

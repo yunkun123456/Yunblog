@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.ssj.yunblog.baseInfo.entity.BlogMessage;
 import com.ssj.yunblog.baseInfo.entity.bo.BlogMessageBo;
 import com.ssj.yunblog.baseInfo.entity.bo.BlogMessageQueryBo;
+import com.ssj.yunblog.baseInfo.entity.vo.BlogCommentVo;
 import com.ssj.yunblog.baseInfo.entity.vo.BlogMessageVo;
 import com.ssj.yunblog.common.entity.Result;
 
@@ -45,4 +46,14 @@ public interface BlogMessageService extends IService<BlogMessage> {
      * 分页查询留言（管理端）
      */
     Result<IPage<BlogMessageVo>> queryPageListAdmin(BlogMessageQueryBo param);
+
+    /**
+     * 获取留言详情
+     */
+    Result<BlogMessageVo> getDetail(String id);
+
+    /**
+     * 获取留言评论列表
+     */
+    Result<IPage<BlogCommentVo>> getComments(String id, Integer current, Integer size);
 }

@@ -3,6 +3,7 @@ package com.ssj.yunblog.baseInfo.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.ssj.yunblog.baseInfo.entity.bo.BlogMessageBo;
 import com.ssj.yunblog.baseInfo.entity.bo.BlogMessageQueryBo;
+import com.ssj.yunblog.baseInfo.entity.vo.BlogCommentVo;
 import com.ssj.yunblog.baseInfo.entity.vo.BlogMessageVo;
 import com.ssj.yunblog.baseInfo.service.BlogMessageService;
 import com.ssj.yunblog.common.access.CheckRole;
@@ -12,7 +13,6 @@ import jakarta.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -34,6 +34,37 @@ public class BlogMessageController {
     @GetMapping("/page")
     public Result<IPage<BlogMessageVo>> queryPageList(BlogMessageQueryBo param) {
         return blogMessageService.queryPageList(param);
+    }
+
+    /**
+     * 获取留言详情
+     */
+    @GetMapping("/{id}")
+    public Result<BlogMessageVo> getDetail(@PathVariable("id") String id) {
+        if (id == null || id.isEmpty()) {
+            return Result.fail("留言ID不能为空");
+        }
+        return blogMessageService.getDetail(id);
+    }
+
+    /**
+     * 获取留言评论列表
+     */
+    @GetMapping("/{id}/comments")
+    public Result<IPage<BlogCommentVo>> getComments(
+            @PathVariable("id") String id,
+            @RequestParam Integer current,
+            @RequestParam Integer size) {
+        if (id == null || id.isEmpty()) {
+            return Result.fail("留言ID不能为空");
+        }
+        if (current == null || current < 1) {
+            current = 1;
+        }
+        if (size == null || size < 1) {
+            size = 10;
+        }
+        return blogMessageService.getComments(id, current, size);
     }
 
     /**

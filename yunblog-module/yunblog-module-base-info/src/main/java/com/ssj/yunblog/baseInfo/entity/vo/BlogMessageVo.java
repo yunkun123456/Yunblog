@@ -62,4 +62,12 @@ public class BlogMessageVo {
      * 分类
      */
     private String category;
+    /**
+     * 是否已点赞
+     */
+    private Boolean liked;
+    /**
+     * 是否已收藏
+     */
+    private Boolean favorited;
 }
