@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssj.yunblog.baseInfo.dao.BlogMessageDao;
 import com.ssj.yunblog.baseInfo.dao.BlogMessageDetailDao;
 import com.ssj.yunblog.baseInfo.entity.BlogMessage;
@@ -47,21 +48,28 @@ public class BlogMessageServiceImpl extends ServiceImpl<BlogMessageDao, BlogMess
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
 
+    /**
+     * 发布留言
+     */
     @Override
     @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     public Result<Boolean> add(BlogMessageBo blogMessage) {
         if (!StpUtil.isLogin()) {
             return Result.fail("请登录后发布留言", ResultCode.UNAUTHORIZED);
         }
-        Map<String, String> map = (Map) redisTemplate.opsForValue().get(RedisKey.USER_INFO_KEY + StpUtil.getLoginId());
-        if (map == null) {
-            return Result.fail("请登录后发布留言", ResultCode.UNAUTHORIZED);
-        }
-        // 创建留言主记录
         BlogMessage message = new BlogMessage();
         message.setUserId(StpUtil.getLoginId().toString());
-        message.setNickname(map.getOrDefault("nickName", ""));
-        message.setEmail(map.getOrDefault("nickName", ""));
+        Object object = redisTemplate.opsForValue().get(RedisKey.USER_INFO_KEY + StpUtil.getLoginId());
+        try {
+            String json = new ObjectMapper().writeValueAsString(object);
+            Map<String, String> map = new ObjectMapper().readValue(json, Map.class);
+            message.setNickname(map.getOrDefault("nickName", ""));
+            message.setEmail(map.getOrDefault("email", ""));
+            message.setAvatar(map.getOrDefault("avatar", ""));
+        } catch (Exception e) {
+            return Result.fail("网络异常，请稍后重试", ResultCode.FAIL);
+        }
+
         message.setTitle(blogMessage.getTitle());
         message.setDiscussionName("");
         message.setLikeCount(0);
