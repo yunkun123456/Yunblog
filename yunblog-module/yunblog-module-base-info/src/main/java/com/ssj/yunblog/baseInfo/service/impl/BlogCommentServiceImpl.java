@@ -173,6 +173,7 @@ public class BlogCommentServiceImpl extends ServiceImpl<BlogCommentDao, BlogComm
             vo.setReplyNickname(comment.getReplyNickname());
             vo.setLikeCount(comment.getLikeCount() == null ? 0 : comment.getLikeCount());
             vo.setLiked(false);
+            vo.setAvatar(comment.getAvatar());
             return vo;
         }).toList());
 

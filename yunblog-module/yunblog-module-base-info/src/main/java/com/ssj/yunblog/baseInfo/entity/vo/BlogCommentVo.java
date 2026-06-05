@@ -36,6 +36,11 @@ public class BlogCommentVo {
     private String content;
 
     /**
+     * 头像
+     */
+    private String avatar;
+
+    /**
      * 创建时间
      */
     private String createTime;
