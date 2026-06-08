@@ -22,4 +22,9 @@ public interface RedisKey {
      * 文章总点赞数
      */
     String BLOG_LIKES = "blog_likes";
+
+    /**
+     * 用户信息hash
+     */
+    String USER_INFO_KEY = "user_info_key";
 }

@@ -106,9 +106,11 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoDao, UserInfo> impl
             return Result.fail("用户不存在！");
         }
         // 创建会话
-        StpUtil.login(list.getFirst().getId());
+        UserInfo userInfo = list.getFirst();
+        StpUtil.login(userInfo.getId());
         // 存储用户名称
         StpUtil.getSession().set("username", list.getFirst().getNickName());
+        redisTemplate.opsForValue().set(RedisKey.USER_INFO_KEY + userInfo.getId(), userInfo);
         // 存在将用户角色和权限保存到Redis中
         String[] roles = list.getFirst().getRoleCode().split(",");
         redisTemplate.opsForValue().set(RedisKey.ROLE_KEY + StpUtil.getLoginId(), roles);
