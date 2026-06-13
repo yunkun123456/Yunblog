@@ -45,6 +45,10 @@ public class BlogMessage {
      */
     private String discussionName;
     /**
+     * 留言内容
+     */
+    private String content;
+    /**
      * 点赞数
      */
     private Integer likeCount;

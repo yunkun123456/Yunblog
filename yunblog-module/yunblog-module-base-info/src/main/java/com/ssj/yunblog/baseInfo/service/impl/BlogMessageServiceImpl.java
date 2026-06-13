@@ -82,19 +82,10 @@ public class BlogMessageServiceImpl extends ServiceImpl<BlogMessageDao, BlogMess
         message.setFavoriteCount(0);
         message.setStatus(0); // 默认待审核
         message.setDelStatus(DeleteStatusEnum.UN_DELETED.getCode());
+        message.setContent(blogMessage.getContent());
 
         if (blogMessageDao.insert(message) <= 0) {
             return Result.fail("留言发布失败");
-        }
-
-        // 创建留言内容记录
-        BlogMessageDetail detail = new BlogMessageDetail();
-        detail.setMessageId(message.getId());
-        detail.setContent(blogMessage.getContent());
-        detail.setDelStatus(DeleteStatusEnum.UN_DELETED.getCode());
-
-        if (blogMessageDetailDao.insert(detail) <= 0) {
-            return Result.fail("留言内容保存失败");
         }
 
         return Result.ok(true, "留言发布成功，等待审核");
@@ -247,14 +238,6 @@ public class BlogMessageServiceImpl extends ServiceImpl<BlogMessageDao, BlogMess
         BlogMessageVo vo = new BlogMessageVo();
         BeanUtils.copyProperties(message, vo);
         vo.setCreateTime(message.getCreateTime().toString());
-
-        LambdaQueryWrapper<BlogMessageDetail> detailWrapper = new LambdaQueryWrapper<>();
-        detailWrapper.eq(BlogMessageDetail::getMessageId, id)
-                .eq(BlogMessageDetail::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode());
-        BlogMessageDetail detail = blogMessageDetailDao.selectOne(detailWrapper);
-        if (detail != null) {
-            vo.setContent(detail.getContent());
-        }
 
         return Result.ok(vo);
     }
