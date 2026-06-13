@@ -51,6 +51,10 @@ public class RoleAspect {
         Method method = ((MethodSignature) proceedingJoinPoint.getSignature()).getMethod();
         CheckRole checkRole = method.getAnnotation(CheckRole.class);
         String[] value = checkRole.value();
+        // all游客皆可访问
+        if ("all".equals(value[0])) {
+            return proceedingJoinPoint.proceed();
+        }
         // 校验权限
         StpUtil.checkRoleOr(value);
 

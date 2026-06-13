@@ -43,7 +43,7 @@ public class KnowledgeController {
     /**
      * 查询知识库下级信息列表
      */
-    @CheckRole(value = {"admin", "COMMON_USER"})
+    @CheckRole(value = {"all", "admin", "COMMON_USER"})
     @GetMapping("/list/{id}")
     public Result<List<KnowledgeInfoVo>> queryLowList(@PathVariable String id) {
         if (id == null || id.isEmpty()) {
@@ -55,7 +55,7 @@ public class KnowledgeController {
     /**
      * 查询知识库信息树形列表
      */
-    @CheckRole(value = {"admin", "COMMON_USER"})
+    @CheckRole(value = {"all", "admin", "COMMON_USER"})
     @GetMapping("/tree/{id}")
     public Result<List<KnowledgeInfoVo>> queryTreeList(@PathVariable String id) {
         if (id == null || id.isEmpty()) {
@@ -67,7 +67,7 @@ public class KnowledgeController {
     /**
      * 查询知识库信息树形列表 - 扩展包含文章内容
      */
-    @CheckRole(value = {"admin", "COMMON_USER"})
+    @CheckRole(value = {"all", "admin", "COMMON_USER"})
     @GetMapping("/tree/paper/{id}")
     public Result<List<KnowledgeInfoVo>> queryTreePaperList(@PathVariable String id) {
         if (id == null || id.isEmpty()) {
