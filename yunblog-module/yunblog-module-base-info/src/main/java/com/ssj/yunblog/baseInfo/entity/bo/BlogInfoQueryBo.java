@@ -1,5 +1,6 @@
 package com.ssj.yunblog.baseInfo.entity.bo;
 
+import com.ssj.yunblog.common.entity.BaseQueryParam;
 import lombok.Data;
 
 /**
@@ -9,7 +10,7 @@ import lombok.Data;
  * @since 2025-09-13 17:08:18
  */
 @Data
-public class BlogInfoQueryBo {
+public class BlogInfoQueryBo extends BaseQueryParam {
     /**
      * 标题
      */
@@ -22,13 +23,5 @@ public class BlogInfoQueryBo {
      * 标签id
      */
     private String labelId;
-    /**
-     * 分页大小
-     */
-    private Integer pageSize = 10;
-    /**
-     * 当前页码
-     */
-    private Integer pageNum = 1;
 }
 
