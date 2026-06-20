@@ -149,11 +149,11 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
                 .like(param.getSearchTitle() != null && !param.getSearchTitle().isEmpty(), BlogInfo::getTitle, param.getSearchTitle())
                 .eq(BlogInfo::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode());
         if ("default".equals(param.getSort())) {
-            queryWrapper.orderBy(true, param.getDesc(), BlogInfo::getCreateTime);
+            queryWrapper.orderBy(true, param.getAsc(), BlogInfo::getCreateTime);
         } else if ("like".equals(param.getSort())) {
-            queryWrapper.orderBy(true, param.getDesc(), BlogInfo::getLikeNum);
+            queryWrapper.orderBy(true, param.getAsc(), BlogInfo::getLikeNum);
         }
-        Page<BlogInfo> page = new Page<>(param.getPageNum(), param.getPageSize());
+        Page<BlogInfo> page = new Page<>(param.getCurrent(), param.getSize());
         IPage<BlogInfo> blogInfoPage = blogInfoDao.selectPage(page, queryWrapper);
         boolean login = StpUtil.isLogin();
         String loginId;
@@ -200,6 +200,8 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
         Page<BlogInfoVo> result = new Page<>();
         result.setRecords(records);
         result.setTotal(blogInfoPage.getTotal());
+        result.setCurrent(page.getCurrent());
+        result.setSize(page.getSize());
         return Result.ok(result);
     }
 

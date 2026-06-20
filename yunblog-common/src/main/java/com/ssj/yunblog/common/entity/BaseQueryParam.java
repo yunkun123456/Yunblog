@@ -14,17 +14,17 @@ public class BaseQueryParam {
     /**
      * 分页大小
      */
-    private Integer pageSize = 10;
+    private Integer size = 10;
     /**
      * 当前页码
      */
-    private Integer pageNum = 1;
+    private Integer current = 1;
     /**
      * 排序字段
      */
     private String sort = "default";
     /**
-     * 降序:true, 升序:false
+     * 降序:false, 升序:true
      */
-    private Boolean desc = true;
+    private Boolean asc = false;
 }
