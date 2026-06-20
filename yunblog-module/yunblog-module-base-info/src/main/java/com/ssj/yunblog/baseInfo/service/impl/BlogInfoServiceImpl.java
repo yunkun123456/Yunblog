@@ -80,7 +80,7 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
         String labelIds = String.join(",", blogInfo.getTags());
         info.setLabelId(labelIds);
         // 插入作者信息
-        String authorName = (String)StpUtil.getSession().get("username");
+        String authorName = (String) StpUtil.getSession().get("username");
         info.setAuthorName(authorName);
         blogInfoDao.insert(info);
         detail.setBlogId(info.getId());
@@ -147,8 +147,12 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
         queryWrapper.eq(param.getCategoryId() != null && !param.getCategoryId().isEmpty(), BlogInfo::getCategoryId, param.getCategoryId())
                 .like(param.getLabelId() != null && !param.getLabelId().isEmpty(), BlogInfo::getLabelId, param.getLabelId())
                 .like(param.getSearchTitle() != null && !param.getSearchTitle().isEmpty(), BlogInfo::getTitle, param.getSearchTitle())
-                .eq(BlogInfo::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode())
-                .orderByDesc(BlogInfo::getLikeNum);
+                .eq(BlogInfo::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode());
+        if ("default".equals(param.getSort())) {
+            queryWrapper.orderBy(true, param.getDesc(), BlogInfo::getCreateTime);
+        } else if ("like".equals(param.getSort())) {
+            queryWrapper.orderBy(true, param.getDesc(), BlogInfo::getLikeNum);
+        }
         Page<BlogInfo> page = new Page<>(param.getPageNum(), param.getPageSize());
         IPage<BlogInfo> blogInfoPage = blogInfoDao.selectPage(page, queryWrapper);
         boolean login = StpUtil.isLogin();
