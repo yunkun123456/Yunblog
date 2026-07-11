@@ -60,11 +60,19 @@ public class BlogInfoController {
     }
 
     /**
-     * 分页查询博客信息
+     * 分页查询博客信息 管理端
      */
     @GetMapping("/page")
     public Result<IPage<BlogInfoVo>> queryPageList(BlogInfoQueryBo param) {
         return blogInfoService.queryPageList(param);
+    }
+
+    /**
+     * 分页查询博客信息 用户端
+     */
+    @GetMapping("/user/page")
+    public Result<IPage<BlogInfoVo>> queryUserPageList(BlogInfoQueryBo param) {
+        return blogInfoService.queryUserPageList(param);
     }
 
     /**
