@@ -25,7 +25,7 @@ public class BlogCategoryVo {
      */
     private Integer categoryLevel;
     /**
-     * 图像地址，后续可能会拓展分类icon
+     * 图像地址，后续可能会拓展分类icon(todo)
      */
     private String picUrl;
     /**
@@ -37,25 +37,9 @@ public class BlogCategoryVo {
      */
     private String parentName;
     /**
-     * 删除标识，0未删除，1已删除
-     */
-    private String delStatus;
-    /**
-     * 创建人
-     */
-    private String createBy;
-    /**
      * 创建时间
      */
     private String createTime;
-    /**
-     * 更新人
-     */
-    private String updateBy;
-    /**
-     * 更新时间
-     */
-    private String updateTime;
     /**
      * 子分类信息
      */

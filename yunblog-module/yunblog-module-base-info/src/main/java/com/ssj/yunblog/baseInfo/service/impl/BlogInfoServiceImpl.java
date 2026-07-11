@@ -139,29 +139,16 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
     }
 
     /**
-     * 分页查询博客基础信息
+     * 分页查询博客基础信息 管理端
      */
     @Override
     public Result<IPage<BlogInfoVo>> queryPageList(BlogInfoQueryBo param) {
         LambdaQueryWrapper<BlogInfo> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(param.getCategoryId() != null && !param.getCategoryId().isEmpty(), BlogInfo::getCategoryId, param.getCategoryId())
-                .like(param.getLabelId() != null && !param.getLabelId().isEmpty(), BlogInfo::getLabelId, param.getLabelId())
-                .like(param.getSearchTitle() != null && !param.getSearchTitle().isEmpty(), BlogInfo::getTitle, param.getSearchTitle())
+        queryWrapper.like(param.getSearchTitle() != null && !param.getSearchTitle().isEmpty(), BlogInfo::getTitle, param.getSearchTitle())
                 .eq(BlogInfo::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode());
-        if ("default".equals(param.getSort())) {
-            queryWrapper.orderBy(true, param.getAsc(), BlogInfo::getCreateTime);
-        } else if ("like".equals(param.getSort())) {
-            queryWrapper.orderBy(true, param.getAsc(), BlogInfo::getLikeNum);
-        }
+        queryWrapper.orderBy(true, false, BlogInfo::getCreateTime);
         Page<BlogInfo> page = new Page<>(param.getCurrent(), param.getSize());
         IPage<BlogInfo> blogInfoPage = blogInfoDao.selectPage(page, queryWrapper);
-        boolean login = StpUtil.isLogin();
-        String loginId;
-        if (login) {
-            loginId = StpUtil.getLoginId().toString();
-        } else {
-            loginId = "";
-        }
         List<BlogInfoVo> records = blogInfoPage.getRecords().stream().map((item) -> {
             BlogInfoVo infoVo = new BlogInfoVo();
             BeanUtils.copyProperties(item, infoVo);
@@ -186,15 +173,6 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
             BeanUtils.copyProperties(category, categoryVo);
             infoVo.setCategory(categoryVo);
             infoVo.setCreateTime(item.getCreateTime().toString().substring(0, 10));
-            // 判断用户是否点赞
-            if (login) {
-                String key = loginId + "_" + item.getId();
-                Integer status = (Integer) redisTemplate.opsForValue().get(key);
-                infoVo.setLikeFlag(status != null && status == 1);
-            } else {
-                // 未登录 默认未点赞
-                infoVo.setLikeFlag(false);
-            }
             return infoVo;
         }).toList();
         Page<BlogInfoVo> result = new Page<>();
@@ -255,7 +233,7 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
         BlogInfo blogInfo = blogInfos.get(index);
         BlogInfoVo result = new BlogInfoVo();
         BeanUtils.copyProperties(blogInfo, result);
-        result.setCreateBy(blogInfo.getAuthorName());
+        result.setAuthorName(blogInfo.getAuthorName());
         result.setCreateTime(blogInfo.getCreateTime().toString().substring(0, 10));
         LambdaQueryWrapper<BlogLabel> wrapper = new LambdaQueryWrapper<>();
         wrapper.in(BlogLabel::getId, Arrays.stream(blogInfo.getLabelId().split(",")).toList())
@@ -320,5 +298,73 @@ public class BlogInfoServiceImpl extends ServiceImpl<BlogInfoDao, BlogInfo> impl
             }
         }
         return Result.ok(true);
+    }
+
+    /**
+     * 分页查询 用户端
+     */
+    @Override
+    public Result<IPage<BlogInfoVo>> queryUserPageList(BlogInfoQueryBo param) {
+        LambdaQueryWrapper<BlogInfo> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(param.getCategoryId() != null && !param.getCategoryId().isEmpty(), BlogInfo::getCategoryId, param.getCategoryId())
+                .like(param.getLabelId() != null && !param.getLabelId().isEmpty(), BlogInfo::getLabelId, param.getLabelId())
+                .like(param.getSearchTitle() != null && !param.getSearchTitle().isEmpty(), BlogInfo::getTitle, param.getSearchTitle())
+                .eq(BlogInfo::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode())
+                .eq(BlogInfo::getRecommend, RecommendStatusEnum.RECOMMEND.getCode());
+        // 用户端默认：点赞，浏览，创建时间排序
+        queryWrapper.orderBy(true, false, BlogInfo::getLikeNum)
+                .orderBy(true, false, BlogInfo::getReadNum)
+                .orderBy(true, false, BlogInfo::getCreateTime);
+
+        Page<BlogInfo> page = new Page<>(param.getCurrent(), param.getSize());
+        IPage<BlogInfo> blogInfoPage = blogInfoDao.selectPage(page, queryWrapper);
+        boolean login = StpUtil.isLogin();
+        String loginId;
+        if (login) {
+            loginId = StpUtil.getLoginId().toString();
+        } else {
+            loginId = "";
+        }
+        List<BlogInfoVo> records = blogInfoPage.getRecords().stream().map((item) -> {
+            BlogInfoVo infoVo = new BlogInfoVo();
+            BeanUtils.copyProperties(item, infoVo);
+            // 获取标签信息
+            List<String> labelIds = Arrays.stream(item.getLabelId().split(",")).toList();
+            LambdaQueryWrapper<BlogLabel> wrapper = new LambdaQueryWrapper<>();
+            wrapper.in(BlogLabel::getId, labelIds)
+                    .eq(BlogLabel::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode());
+            List<BlogLabel> blogLabels = blogLabelDao.selectList(wrapper);
+            List<BlogLabelVo> blogLabelVos = blogLabels.stream().map(blogLabel -> {
+                BlogLabelVo labelVo = new BlogLabelVo();
+                BeanUtils.copyProperties(blogLabel, labelVo);
+                return labelVo;
+            }).toList();
+            infoVo.setLabels(blogLabelVos);
+            // 获取分类信息
+            LambdaQueryWrapper<BlogCategory> categoryWrapper = new LambdaQueryWrapper<>();
+            categoryWrapper.eq(BlogCategory::getId, item.getCategoryId())
+                    .eq(BlogCategory::getDelStatus, DeleteStatusEnum.UN_DELETED.getCode());
+            BlogCategory category = blogCategoryDao.selectOne(categoryWrapper);
+            BlogCategoryVo categoryVo = new BlogCategoryVo();
+            BeanUtils.copyProperties(category, categoryVo);
+            infoVo.setCategory(categoryVo);
+            infoVo.setCreateTime(item.getCreateTime().toString().substring(0, 10));
+            // 判断用户是否点赞
+            if (login) {
+                String key = loginId + "_" + item.getId();
+                Integer status = (Integer) redisTemplate.opsForValue().get(key);
+                infoVo.setLikeFlag(status != null && status == 1);
+            } else {
+                // 未登录 默认未点赞
+                infoVo.setLikeFlag(false);
+            }
+            return infoVo;
+        }).toList();
+        Page<BlogInfoVo> result = new Page<>();
+        result.setRecords(records);
+        result.setTotal(blogInfoPage.getTotal());
+        result.setCurrent(page.getCurrent());
+        result.setSize(page.getSize());
+        return Result.ok(result);
     }
 }

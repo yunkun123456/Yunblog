@@ -60,4 +60,9 @@ public interface BlogInfoService extends IService<BlogInfo> {
      * 点赞
      */
     Result<Boolean> giveALike(String blogId, Integer status);
+
+    /**
+     * 分页查询 用户端
+     */
+    Result<IPage<BlogInfoVo>> queryUserPageList(BlogInfoQueryBo param);
 }
