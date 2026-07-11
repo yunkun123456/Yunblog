@@ -53,24 +53,12 @@ public class BlogInfoVo {
      */
     private List<String> tags;
     /**
-     * 删除标识，0未删除，1已删除
+     * 作者
      */
-    private String delStatus;
-    /**
-     * 创建人
-     */
-    private String createBy;
+    private String authorName;
     /**
      * 创建时间
      */
     private String createTime;
-    /**
-     * 更新人
-     */
-    private String updateBy;
-    /**
-     * 更新时间
-     */
-    private String updateTime;
 }
 
