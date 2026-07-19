@@ -27,6 +27,11 @@ spring:
       # 本地redis缓存，占用10库
       database: 10
 
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+
 logging:
   level:
     com.ssj.yunblog.baseInfo.dao: debug
