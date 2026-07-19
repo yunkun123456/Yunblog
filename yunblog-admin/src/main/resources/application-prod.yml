@@ -28,6 +28,11 @@ spring:
       port: 6379
       password: ssj200115
 
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+
 logging:
   level:
     com.ssj.yunblog.baseInfo.dao: debug
