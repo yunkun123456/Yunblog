@@ -7,9 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssj.yunblog.baseInfo.dao.BlogMessageDao;
-import com.ssj.yunblog.baseInfo.dao.BlogMessageDetailDao;
 import com.ssj.yunblog.baseInfo.entity.BlogMessage;
-import com.ssj.yunblog.baseInfo.entity.BlogMessageDetail;
 import com.ssj.yunblog.baseInfo.entity.bo.BlogCommentQueryBo;
 import com.ssj.yunblog.baseInfo.entity.bo.BlogMessageBo;
 import com.ssj.yunblog.baseInfo.entity.bo.BlogMessageQueryBo;
@@ -42,9 +40,6 @@ public class BlogMessageServiceImpl extends ServiceImpl<BlogMessageDao, BlogMess
 
     @Resource
     private BlogMessageDao blogMessageDao;
-
-    @Resource
-    private BlogMessageDetailDao blogMessageDetailDao;
 
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
