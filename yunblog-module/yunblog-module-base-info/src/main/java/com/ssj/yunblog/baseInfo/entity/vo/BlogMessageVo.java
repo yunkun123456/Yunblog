@@ -47,6 +47,10 @@ public class BlogMessageVo {
      */
     private Integer likeCount;
     /**
+     * 审核状态
+     */
+    private Integer status;
+    /**
      * 评论数
      */
     private Integer commentCount;
